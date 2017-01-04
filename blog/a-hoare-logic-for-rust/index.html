@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en-us">
 
@@ -227,7 +226,7 @@ a += 2;
 
 <p><span  class="math">\(P[x \gets E]\)</span> denotes replacing every free (unbound) <span  class="math">\(x\)</span> with <span  class="math">\(E\)</span>.</p>
 
-<p>Let's say <span  class="math">\(P\)</span> involves some assertion about <span  class="math">\(x\)</span>, then we can move it over the assignment (to the precondition) replacing <span  class="math">\(x\)</span> with the right-hand-side of the assignment, because every occurence of <span  class="math">\(x\)</span> represents said value anyway, so substituting the value <span  class="math">\(x\)</span> represents for <span  class="math">\(x\)</span> won't change the structure.</p>
+<p>Let's say <span  class="math">\(P\)</span> involves some assertion about <span  class="math">\(x\)</span>, then we can move it over the assignment (to the precondition) replacing <span  class="math">\(x\)</span> with the right-hand-side of the assignment, because every occurrence of <span  class="math">\(x\)</span> represents said value anyway, so substituting the value <span  class="math">\(x\)</span> represents for <span  class="math">\(x\)</span> won't change the structure.</p>
 
 <p>Let's say we have the statement, <span  class="math">\(x \gets x + 2\)</span>, with the postcondition <span  class="math">\(\{x = 6\}\)</span>, we can then derive the Hoare triple:</p>
 
@@ -447,7 +446,7 @@ Q((a, b), r) &= [r \leq a]
 
 <p>This is perhaps more of a definition than an axiom. None the less, it describes the semantics of our alias relation.</p>
 
-<p>Then we describe the behavior of alias asignments:</p>
+<p>Then we describe the behavior of alias assignments:</p>
 
 <p><span  class="math">\[\frac{}{\{A = \textbf{alias}(a)\}\ a \stackrel{\text{alias}}{\gets} b\ \{\textbf{alias}(a) = A \cup \{b\}\}}\]</span></p>
 
@@ -471,13 +470,13 @@ Q((a, b), r) &= [r \leq a]
 
 <h3 id="insufficiency">Insufficiency</h3>
 
-<p>This model allows reasoning about aliases, but <em>not</em> pointers in general. In fact, it cannot reason about <code>noalias</code> pointers, deallocation, and pointer arithmetics.</p>
+<p>This model allows reasoning about aliases, but <em>not</em> pointers in general. In fact, it cannot reason about <code>noalias</code> pointers, deallocation, and pointer arithmetic.</p>
 
 <h2 id="approach-3-separation-logic">Approach 3: Separation logic</h2>
 
 <p>Separation logic was originally introduced by JC Reynolds in one of the most cited program verification papers ever. It is more complex than the alternative model we just presented, but also more expressive in some cases.</p>
 
-<h3 id="modeling-memory">Modeling memory</h3>
+<h3 id="modeling-memory">Modelling memory</h3>
 
 <p>Our model of memory consists of multiple new notations. First of all, the model becomes memory aware. We use <span  class="math">\(p \mapsto x\)</span> to denote that some pointer, <span  class="math">\(p\)</span>, maps to the value <span  class="math">\(x\)</span>.</p>
 
