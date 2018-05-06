@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>theory on Ticki&#39;s blog</title>
+    <link>http://ticki.github.io/tags/theory/</link>
+    <description>Recent content in theory on Ticki&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 24 Sep 2016 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://ticki.github.io/tags/theory/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>A Hoare Logic for Rust</title>
+      <link>http://ticki.github.io/blog/a-hoare-logic-for-rust/</link>
+      <pubDate>Sat, 24 Sep 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://ticki.github.io/blog/a-hoare-logic-for-rust/</guid>
+      <description>Lately, I&#39;ve been working on a Hoare-logic-based model of the Rust MIR, which I will introduce in the post. This is a minor step towards a memory model of Rust, and it allows formalization of programs and their behavior.
+This project was born out of the effort to formalize the Redox kernel and the ralloc memory allocator as well as coming up with a Rust memory model.
+Here I will walk through the techniques, axioms, and transformations in detail.</description>
+    </item>
+    
+  </channel>
+</rss>

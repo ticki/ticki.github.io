@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mind-dump on Ticki&#39;s blog</title>
+    <link>http://ticki.github.io/tags/mind-dump/</link>
+    <description>Recent content in mind-dump on Ticki&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 23 Oct 2016 23:25:15 +0200</lastBuildDate>
+    
+	<atom:link href="http://ticki.github.io/tags/mind-dump/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>On Random-Access Compression</title>
+      <link>http://ticki.github.io/blog/on-random-access-compression/</link>
+      <pubDate>Sun, 23 Oct 2016 23:25:15 +0200</pubDate>
+      
+      <guid>http://ticki.github.io/blog/on-random-access-compression/</guid>
+      <description>This post will contains an algorithm I came up with, doing efficient rolling compression. It&#39;s going to be used in TFS.
+What is rolling compression? Consider that you have a large file and you want to compress it. That&#39;s easy enough and many algorithms exists for doing so. Now, consider that you want to read or write a small part of the file.
+Most algorithms would require you to decompress, write, and recompress the whole file.</description>
+    </item>
+    
+    <item>
+      <title>A Hoare Logic for Rust</title>
+      <link>http://ticki.github.io/blog/a-hoare-logic-for-rust/</link>
+      <pubDate>Sat, 24 Sep 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://ticki.github.io/blog/a-hoare-logic-for-rust/</guid>
+      <description>Lately, I&#39;ve been working on a Hoare-logic-based model of the Rust MIR, which I will introduce in the post. This is a minor step towards a memory model of Rust, and it allows formalization of programs and their behavior.
+This project was born out of the effort to formalize the Redox kernel and the ralloc memory allocator as well as coming up with a Rust memory model.
+Here I will walk through the techniques, axioms, and transformations in detail.</description>
+    </item>
+    
+  </channel>
+</rss>

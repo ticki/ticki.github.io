@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mathematics on Ticki&#39;s blog</title>
+    <link>http://ticki.github.io/tags/mathematics/</link>
+    <description>Recent content in mathematics on Ticki&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 24 Sep 2016 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://ticki.github.io/tags/mathematics/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>A Hoare Logic for Rust</title>
+      <link>http://ticki.github.io/blog/a-hoare-logic-for-rust/</link>
+      <pubDate>Sat, 24 Sep 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://ticki.github.io/blog/a-hoare-logic-for-rust/</guid>
+      <description>Lately, I&#39;ve been working on a Hoare-logic-based model of the Rust MIR, which I will introduce in the post. This is a minor step towards a memory model of Rust, and it allows formalization of programs and their behavior.
+This project was born out of the effort to formalize the Redox kernel and the ralloc memory allocator as well as coming up with a Rust memory model.
+Here I will walk through the techniques, axioms, and transformations in detail.</description>
+    </item>
+    
+    <item>
+      <title>Lambda crabs (part 3): Region-based alias analysis</title>
+      <link>http://ticki.github.io/blog/lambda-crabs-part-3-region-based-alias-analysis/</link>
+      <pubDate>Wed, 08 Jun 2016 11:24:24 +0200</pubDate>
+      
+      <guid>http://ticki.github.io/blog/lambda-crabs-part-3-region-based-alias-analysis/</guid>
+      <description>In the last post, we saw how to infer regions and their span. In this post, we will cover aliasing and how to ensure guarantees through region analysis.
+Aliasing, mutable aliasing, and unsafety. Two pointers are said to be aliased, if they refer to the same object. Alias analysis is essential to program verification, optimizers, and compiler theory.
+Alias analysis is the study of which pointers are aliased and, more importantly, which pointers aren&amp;rsquo;t aliased.</description>
+    </item>
+    
+    <item>
+      <title>Lambda crabs (part 2): Region inference is (not) magic.</title>
+      <link>http://ticki.github.io/blog/lambda-crabs-part-2-region-inference-is-not-magic./</link>
+      <pubDate>Mon, 06 Jun 2016 11:06:21 +0200</pubDate>
+      
+      <guid>http://ticki.github.io/blog/lambda-crabs-part-2-region-inference-is-not-magic./</guid>
+      <description>This post will cover region (lifetime) inference with a mathematical and type theoretical focus.
+The problem Inference is a very handy concept. We no longer have to annotate redundant types, which is a major pain point in languages, that lacks of type inference.
+Now, we want such an inference scheme for regions as well.
+We described the problem of region inference in last post as:
+ So, this is just a classical optimization problem:</description>
+    </item>
+    
+    <item>
+      <title>Lambda crabs (part 1): A mathematical introduction to lifetimes and regions</title>
+      <link>http://ticki.github.io/blog/lambda-crabs-part-1-a-mathematical-introduction-to-lifetimes-and-regions/</link>
+      <pubDate>Mon, 06 Jun 2016 09:12:56 +0200</pubDate>
+      
+      <guid>http://ticki.github.io/blog/lambda-crabs-part-1-a-mathematical-introduction-to-lifetimes-and-regions/</guid>
+      <description>This post will cover lifetimes and regions in depth, with a focus on the mathematical background of regions. That is, what is a region? What rules do they follow? How does the compiler handle them? And how are they inferred?
+Regions and their ordering So, let&amp;rsquo;s briefly investigate what a region is. A region (or in Rust lingo, a lifetime) is a span of some form, e.g. the token stream.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>cow on Ticki&#39;s blog</title>
+    <link>http://ticki.github.io/tags/cow/</link>
+    <description>Recent content in cow on Ticki&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 23 Oct 2016 23:25:15 +0200</lastBuildDate>
+    
+	<atom:link href="http://ticki.github.io/tags/cow/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>On Random-Access Compression</title>
+      <link>http://ticki.github.io/blog/on-random-access-compression/</link>
+      <pubDate>Sun, 23 Oct 2016 23:25:15 +0200</pubDate>
+      
+      <guid>http://ticki.github.io/blog/on-random-access-compression/</guid>
+      <description>This post will contains an algorithm I came up with, doing efficient rolling compression. It&#39;s going to be used in TFS.
+What is rolling compression? Consider that you have a large file and you want to compress it. That&#39;s easy enough and many algorithms exists for doing so. Now, consider that you want to read or write a small part of the file.
+Most algorithms would require you to decompress, write, and recompress the whole file.</description>
+    </item>
+    
+  </channel>
+</rss>

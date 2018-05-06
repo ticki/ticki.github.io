@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>critique on Ticki&#39;s blog</title>
+    <link>http://ticki.github.io/tags/critique/</link>
+    <description>Recent content in critique on Ticki&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 12 Sep 2016 22:50:08 +0200</lastBuildDate>
+    
+	<atom:link href="http://ticki.github.io/tags/critique/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>A Critique of Rust&#39;s `std::collections`</title>
+      <link>http://ticki.github.io/blog/horrible/</link>
+      <pubDate>Mon, 12 Sep 2016 22:50:08 +0200</pubDate>
+      
+      <guid>http://ticki.github.io/blog/horrible/</guid>
+      <description>Rust is by far my favorite language, and I am very familiar with it, but there is one aspect that annoys me at times: std::collections, a part of the opt-out standard library.
+This post will go through the short-fallings of the API and implementation of std::collections. I&amp;rsquo;ll try to present alternatives and way to improve it.
+Update: The title was previously &amp;ldquo;Why std::collections is absolutely horrible&amp;rdquo;. It was in the hope to spark critical discussion, however people were rather annoyed by this title (and I understand why), so I changed it to something less provocative.</description>
+    </item>
+    
+  </channel>
+</rss>

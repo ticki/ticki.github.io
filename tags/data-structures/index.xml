@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>data-structures on Ticki&#39;s blog</title>
+    <link>http://ticki.github.io/tags/data-structures/</link>
+    <description>Recent content in data-structures on Ticki&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 16 Feb 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://ticki.github.io/tags/data-structures/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Collision Resolution with Nested Hash Tables</title>
+      <link>http://ticki.github.io/blog/collision-resolution-with-nested-hash-tables/</link>
+      <pubDate>Thu, 16 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://ticki.github.io/blog/collision-resolution-with-nested-hash-tables/</guid>
+      <description>Collision resolution Hash collisions in hash tables are unevitable, and therefore every proper implementation needs a form of collision resolution. Collision resolution is the name of the class of algorithms and techniques used to organize and resolve the case where two entries in the table hash to the same bucket.
+It turns out that the choice and implementation of collision resolution is absolutely critical for the performance of the table, because while hash tables are often mistaken for having \(O(1)\) lookups, they do in reality and theory have a sligthly more complicated behavior.</description>
+    </item>
+    
+    <item>
+      <title>Skip Lists: Done Right</title>
+      <link>http://ticki.github.io/blog/skip-lists-done-right/</link>
+      <pubDate>Sat, 17 Sep 2016 13:46:49 +0200</pubDate>
+      
+      <guid>http://ticki.github.io/blog/skip-lists-done-right/</guid>
+      <description>What is a skip list? In short, skip lists are a linked-list-like structure which allows for fast search. It consists of a base list holding the elements, together with a tower of lists maintaining a linked hierarchy of subsequences, each skipping over fewer elements.
+Skip list is a wonderful data structure, one of my personal favorites, but a trend in the past ten years has made them more and more uncommon as a single-threaded in-memory structure.</description>
+    </item>
+    
+    <item>
+      <title>Why Rust&#39;s `std::collections` is absolutely fantastic</title>
+      <link>http://ticki.github.io/blog/fantastic/</link>
+      <pubDate>Wed, 14 Sep 2016 16:07:34 +0200</pubDate>
+      
+      <guid>http://ticki.github.io/blog/fantastic/</guid>
+      <description>My last blog post was about all the short-fallings and problems std::collections has. This post will be about the opposite: all the good things about std::collections and what other languages can learn from Rust.
+This post is a part of an on-going series of posts criticizing and praising various parts of Rust.
+The philosophy of std::collections Rust has an intentionally small set of collections. This has both advantages and disadvantages.</description>
+    </item>
+    
+    <item>
+      <title>A Critique of Rust&#39;s `std::collections`</title>
+      <link>http://ticki.github.io/blog/horrible/</link>
+      <pubDate>Mon, 12 Sep 2016 22:50:08 +0200</pubDate>
+      
+      <guid>http://ticki.github.io/blog/horrible/</guid>
+      <description>Rust is by far my favorite language, and I am very familiar with it, but there is one aspect that annoys me at times: std::collections, a part of the opt-out standard library.
+This post will go through the short-fallings of the API and implementation of std::collections. I&amp;rsquo;ll try to present alternatives and way to improve it.
+Update: The title was previously &amp;ldquo;Why std::collections is absolutely horrible&amp;rdquo;. It was in the hope to spark critical discussion, however people were rather annoyed by this title (and I understand why), so I changed it to something less provocative.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,787 @@
+
+<!DOCTYPE html>
+<html lang="en-us">
+
+    <head>
+
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+        <meta property="og:title" content=" The Eudex Algorithm &middot;  Ticki&#39;s blog" />
+        <meta property="og:site_name" content="Ticki&#39;s blog" />
+        <meta property="og:url" content="http://ticki.github.io/blog/the-eudex-algorithm/" />
+
+    
+        <meta property="og:type" content="article" />
+        <meta property="og:article:published_time" content="2016-12-11T00:00:00Z" />
+        <meta property="og:article:tag" content="eudex" />
+        <meta property="og:article:tag" content="phonetics" />
+        <meta property="og:article:tag" content="algorithms" />
+        
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@ticki_" />
+        <meta name="twitter:creator" content="@ticki_" />
+        <meta name="twitter:title" content="The Eudex Algorithm" />
+        <meta name="twitter:description" content="7 months ago, I designed the Eudex phonetic algorithm, which I explain in this post." />
+        <meta name="twitter:url" content="http://ticki.github.io/blog/the-eudex-algorithm/" />
+    
+
+        <title> The Eudex Algorithm &middot;  Ticki&#39;s blog</title>
+
+    
+        <meta name="description" content="7 months ago, I designed the Eudex phonetic algorithm, which I explain in this post." />
+    
+
+        <meta name="p:domain_verify" content="fc173d84e3a4de948ed4bda2908afd3e"/>
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="MobileOptimized" content="320" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        
+        
+
+    
+        <link href="http://ticki.github.io/index.xml" rel="alternate" type="application/rss+xml" title="Ticki&#39;s blog" />
+    
+
+    
+        <link rel="canonical" href="http://ticki.github.io/blog/the-eudex-algorithm/" />
+
+    
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "headline": "The Eudex Algorithm",
+        "author": {
+            "@type": "Person",
+            "name": "http://profiles.google.com/?rel=author"
+        },
+        "datePublished": "2016-12-11",
+        "description": "7 months ago, I designed the Eudex phonetic algorithm, which I explain in this post.",
+        "wordCount":  1670 
+    }
+
+    </script>
+
+    <script type="text/javascript">
+    
+    
+      var disqus_shortname = 'http-ticki-github-io';
+      var disqus_identifier = 'http:\/\/ticki.github.io\/blog\/the-eudex-algorithm\/';
+      var disqus_title = 'The Eudex Algorithm';
+      var disqus_url = 'http:\/\/ticki.github.io\/blog\/the-eudex-algorithm\/';
+    
+
+    </script>
+    
+
+    <style>
+@charset "UTF-8";article,header,img,main,nav,section{display:block}blockquote,p,pre,ul{margin:2em auto}#wrapper,pre{width:100%;box-sizing:border-box}#nav,#wrapper,code{position:relative}#nav,body{background:#fff}#menu,blockquote,pre code{background:0 0}#menu,#menu .menu-header,#menu .menu-list,#wrapper,.post-nav .post-nav-item .post-nav-teaser .post-nav-info,blockquote,pre{box-sizing:border-box}img{border:0;max-width:100%;height:auto;margin:2.5em auto}html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}code,pre{font-family:monospace,monospace;font-size:1em}@font-face{font-family:'Merriweather Sans';font-style:normal;font-weight:300;src:local("Merriweather Sans Light"),local("MerriweatherSans-Light"),url(//fonts.gstatic.com/s/merriweathersans/v5/6LmGj5dOJopQKEkt88GowY_zIojJi0m4a5Z6tRh6itY.woff) format("woff")}@font-face{font-family:'Merriweather Sans';font-style:normal;font-weight:400;src:local("Merriweather Sans Regular"),local("MerriweatherSans-Regular"),url(//fonts.gstatic.com/s/merriweathersans/v5/AKu1CjQ4qnV8MUltkAX3sL2aU247V0zTzydO4RoO9Ok.woff) format("woff")}@font-face{font-family:'Merriweather Sans';font-style:normal;font-weight:700;src:local("Merriweather Sans Bold"),local("MerriweatherSans-Bold"),url(//fonts.gstatic.com/s/merriweathersans/v5/6LmGj5dOJopQKEkt88GowQfd-b-I5PxxcmB4_-MNcqw.woff) format("woff")}@font-face{font-family:'Merriweather Sans';font-style:normal;font-weight:800;src:local("Merriweather Sans ExtraBold"),local("MerriweatherSans-ExtraBold"),url(//fonts.gstatic.com/s/merriweathersans/v5/6LmGj5dOJopQKEkt88GowWT7sFQ1Iz1BbpcuCPlgc9Q.woff) format("woff")}@font-face{font-family:'Merriweather Sans';font-style:italic;font-weight:300;src:local("Merriweather Sans Light Italic"),local("MerriweatherSans-LightItalic"),url(//fonts.gstatic.com/s/merriweathersans/v5/nAqt4hiqwq3tzCecpgPmVX9UU5BmOJGkLxUCVv5VXdc.woff) format("woff")}@font-face{font-family:'Merriweather Sans';font-style:italic;font-weight:400;src:local("Merriweather Sans Italic"),local("MerriweatherSans-Italic"),url(//fonts.gstatic.com/s/merriweathersans/v5/3Mz4hOHzs2npRMG3B1ascf0KIgDhPIHb_R-SWdtqte8.woff) format("woff")}@font-face{font-family:'Merriweather Sans';font-style:italic;font-weight:700;src:local("Merriweather Sans Bold Italic"),local("MerriweatherSans-BoldItalic"),url(//fonts.gstatic.com/s/merriweathersans/v5/nAqt4hiqwq3tzCecpgPmVYM8pfYvjMoOxygpzLVILAs.woff) format("woff")}@font-face{font-family:Inconsolata;font-style:normal;font-weight:400;src:local("Inconsolata"),url(//fonts.gstatic.com/s/inconsolata/v12/BjAYBlHtW3CJxDcjzrnZCIbN6UDyHWBl620a-IRfuBk.woff) format("woff")}@font-face{font-family:Inconsolata;font-style:normal;font-weight:700;src:local("Inconsolata Bold"),local("Inconsolata-Bold"),url(//fonts.gstatic.com/s/inconsolata/v12/AIed271kqQlcIRSOnQH0yTqR_3kx9_hJXbbyU8S6IN0.woff) format("woff")}@font-face{font-family:icons;src:url(/fonts/icons.eot?9273991);src:url(/fonts/icons.eot?9273991#iefix) format("embedded-opentype"),url(/fonts/icons.woff?9273991) format("woff"),url(/fonts/icons.ttf?9273991) format("truetype"),url(/fonts/icons.svg?9273991#icons) format("svg");font-weight:400;font-style:normal}[class^=icon-]:before{font-family:icons;font-style:normal;font-weight:400;speak:none;display:inline-block;text-decoration:inherit;width:1em;margin-right:.2em;text-align:center;font-variant:normal;text-transform:none;line-height:1em;margin-left:.2em;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.icon-arrow-left:before{content:'\e804'}.icon-arrow-right:before{content:'\e807'}.icon-rss:before{content:'\e808'}.icon-menu:before{content:'\e809'}body{margin:0;font:300 1em/1.5em 'Merriweather Sans',sans-serif;color:#595B66}blockquote,i{font-style:italic}code,pre{font-family:Inconsolata,monospace}a,blockquote,code,i{font-weight:400}::-moz-selection{color:#222;background:#D6EDFF;text-shadow:none}::-moz-selection,::selection{color:#222;background:#D6EDFF;text-shadow:none}a{background-color:transparent;color:inherit;text-decoration:none;transition:all ease-out .2s}.post-content a{border-bottom:2px solid #36D995}h1,h4{text-rendering:optimizeLegibility;color:#1F2026}h1{font-size:2em;line-height:1em;margin:2em 0 -.5em}h4{font-size:1.25em;line-height:1.2em;margin:2.4em 0 -.8em}ul{list-style:none;padding-left:3em}blockquote{padding:0 1em;border-left:.25em solid #D4D5D9;color:#595B66}blockquote *{margin:1em auto}blockquote :first-child{margin-top:0}blockquote :last-child{margin-bottom:0}i{color:#363740}code{display:inline-block;top:-1px;padding:3px 6px;margin:-1px 2px;font-size:.875em;line-height:1.143em;background:#E1E2E6;color:#000;border-radius:2px}pre{padding:1em;white-space:pre;overflow:auto;background:#9D9FA6;color:#fff}pre code{position:static;top:auto;font-size:1em;line-height:1.5em;white-space:-moz-pre-wrap;white-space:pre-wrap;vertical-align:inherit;border:none;padding:0}#menu .menu-header:before,.post .post-title:before{border-bottom:4px solid #36D995;content:''}.inner{max-width:48em;margin:0 auto;padding:0 1em}#wrapper{min-height:100vh;padding-bottom:6em;background:#F2F3F5}#push{-webkit-transform:translate3d(0,0,0);transform:translate3d(0,0,0);-webkit-transform-style:preserve-3d;transform-style:preserve-3d;opacity:1}#nav{z-index:70;transition:all ease-out .4s;-webkit-transform:translate3d(0,0,0);transform:translate3d(0,0,0);-webkit-transform-style:preserve-3d;transform-style:preserve-3d;opacity:1}#nav:after{clear:both;content:'';display:table}#nav .nav-logo{float:left;height:2em;padding:1em;max-width:50%}#nav .nav-logo img{width:auto;max-width:none;height:2em;margin:0}#nav .nav-menu{float:right}#nav .nav-menu:after{clear:both;content:'';display:table}#nav .nav-menu a{display:block;width:1em;height:1em;line-height:1em;padding:1.5em;text-align:center;float:left;cursor:pointer}#nav .nav-menu a i:before{margin:auto}#menu{display:none;position:fixed;left:50%;top:5%;width:30em;height:90%;margin-left:-15em;padding:3em 0 0;overflow:hidden;transition:all ease-out .3s;-webkit-transform:translate3d(0,2em,0);transform:translate3d(0,2em,0);-webkit-transform-style:preserve-3d;transform-style:preserve-3d;opacity:0;z-index:100}@media only screen and (max-width:50em){#menu{width:90%;left:5%;margin-left:auto}}#menu .menu-header{position:absolute;left:0;top:0;width:100%;height:3.5em;padding:1em 1.5em .5em;margin-bottom:1em;line-height:2em;z-index:110;background:#fff}#menu .menu-header:before{position:absolute;left:-5%;bottom:-1em;width:110%;height:2em;background:#fff;box-shadow:0 .125em .125em rgba(0,0,0,.1);-webkit-transform:rotate(2.5deg);transform:rotate(2.5deg);transition:all ease-out .2s;z-index:115}#menu .menu-header:after{clear:both;content:'';display:table}#menu .menu-header .menu-label{position:relative;display:block;float:left;z-index:120}#menu .menu-header .menu-close{position:relative;display:block;float:right;width:2em;height:2em;padding:1em;margin:-1em -1.5em -1em 0;cursor:pointer;z-index:125}#menu .menu-header .menu-close:after,#menu .menu-header .menu-close:before{content:'';position:absolute;left:50%;top:50%;background:#9D9FA6;-webkit-transform:rotate(45deg);transform:rotate(45deg)}.overlay,.overlay:before{top:0;width:100%;height:100%}#menu .menu-header .menu-close:after{width:2px;height:1em;margin:-.5em 0 0 -1px}#menu .menu-header .menu-close:before{width:1em;height:2px;margin:-1px 0 0 -.5em}#menu .menu-list{position:relative;list-style:none;margin:0;padding:2em 0;height:100%;overflow-x:hidden;overflow-y:scroll;background:#fff}.overlay{position:fixed;left:0;z-index:80;display:none}.overlay:before{content:'';position:absolute;left:0;background:#1F2026;opacity:0;transition:all ease-out .3s;-webkit-transform-style:preserve-3d;transform-style:preserve-3d}.post{position:relative;z-index:20}.post .post-meta{display:block;font-size:.75em;line-height:1.334em;font-weight:400;margin-bottom:1.334em}.post .post-title{position:relative;color:#000;font-size:2em;line-height:1.375em;font-weight:800;text-indent:-1px;margin:.25em 0 .75em}.post .post-title:before{position:absolute;left:0;bottom:-.334em;width:1em;margin-bottom:-2px}.post .post-header{padding:4em 0 0;margin-bottom:3em}.post-footer .post-share a span{display:none}.post-nav .post-nav-item{position:fixed;top:50%;display:block;margin-top:-4em;overflow:hidden;border-radius:10em;transition:none}@media only screen and (max-width:70em){.post-nav .post-nav-item{position:absolute;top:auto;margin:auto;max-width:50%}}.post-nav .post-nav-item.post-nav-next{left:0;text-align:left}.post-nav .post-nav-item.post-nav-next .post-nav-icon{float:left}.post-nav .post-nav-item.post-nav-next .post-nav-icon i{left:-.05em}.post-nav .post-nav-item.post-nav-next .post-nav-info{padding-left:6em}.post-nav .post-nav-item.post-nav-prev{right:0;text-align:right}.post-nav .post-nav-item.post-nav-prev .post-nav-icon{float:right}.post-nav .post-nav-item.post-nav-prev .post-nav-icon i{right:-.05em}.post-nav .post-nav-item.post-nav-prev .post-nav-info{padding-right:6em}.post-nav .post-nav-item .post-nav-teaser{display:block;padding:1em;transition:all ease-out .2s;max-width:25em;overflow:visible}.post-nav .post-nav-item .post-nav-teaser:after{clear:both;content:'';display:table}.post-nav .post-nav-item .post-nav-teaser .post-nav-icon{display:block;width:5em;height:5em;line-height:5em;text-align:center;box-sizing:border-box;border-radius:10em;border:1px solid #36D995;box-shadow:0 0 0 0 transparent;transition:all ease-out .1s;background:#F2F3F5}.post-nav .post-nav-item .post-nav-teaser .post-nav-icon i{position:relative;font-size:2em}@media only screen and (max-width:30em){.post-nav .post-nav-item .post-nav-teaser .post-nav-icon{width:4em;height:4em;line-height:4em}.post-nav .post-nav-item .post-nav-teaser .post-nav-icon i{font-size:1.5em}}.post-nav .post-nav-item .post-nav-teaser .post-nav-icon i:before{margin:auto}.post-nav .post-nav-item .post-nav-teaser .post-nav-info{display:none;width:100%;transition:all ease-out .2s}.post-nav .post-nav-item .post-nav-teaser .post-nav-info .post-nav-title{display:block;max-height:1.25em;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin:1.25em 0 .25em;font-size:1em;line-height:1.25em;font-weight:700;color:#363740}.post-nav .post-nav-item .post-nav-teaser .post-nav-info .post-nav-excerpt{display:block;max-height:1.334em;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin:0;font-size:.75em;line-height:1.334em;font-weight:400;color:#9D9FA6}
+</style>
+
+
+    </head>
+    <body class="home-template" style="display: none;">
+      <section id="wrapper">
+        <div id="ajax-container">
+          <nav id="nav" class="nav">
+            <div class="nav-logo">
+              <a href="http://ticki.github.io/">
+      			  	
+      			  	
+      			  	<img src="/logo.png" alt="Logo"/>
+      			  	
+              </a>
+			  	    
+            </div>
+            <div class="nav-menu">
+              <a class="menu" href="https://twitter.com/ticki_"><i class="icon-twitter"></i></a>
+              <a class="rss" href="">
+                <i class="icon-rss"></i>
+              </a>
+                
+                <a class="menu" data-action="toc" data-target="toc"><i class="icon-location"></i></a>
+                
+                
+                <a class="menu" data-action="menu" data-target="menu"><i class="icon-menu"></i></a>
+                
+            </div>
+          </nav>
+
+
+<main class="content" role="main">
+	<article class="post">
+		<div class="inner">
+
+			<div id="push">
+
+  			<header class="post-header">
+  				<span class="post-meta">
+						<span class="post-date">11 Dec 2016</span> <span class="reading-time">| <span class="estimated-reading-time">8 min.</span> (<span class="word-count">1670</span> words)</span></span>
+  				</span>
+  				<div class="clear"></div>
+  				<h1 class="post-title">The Eudex Algorithm</h1>
+  			</header>
+
+  			<section class="post-content">
+  				<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<p>Half a year ago, I designed <a href="https://github.com/ticki/eudex">Eudex</a> as a modern
+replacement for Soundex, which is still widely used today. Eudex supports a
+wide range of special-cases of European languages, while preserving the spirit
+of simplicity, Soundex has.</p>
+
+<p>Both Eudex and Soundex are phonetic algorithms that produce a representation of
+the sound of some string. Eudex is fundamentally different from Soundex in that
+it is not a phonetic classifier. It is a phonetic locality-sensitive hash,
+which means that two similarly-sounding strings are not mapped to the same
+value, but instead to values near to each other.</p>
+
+<p>This technically makes it a string similarity index, but it one should be
+careful with this term, given that it doesn't produce a typing distance, but a
+phonetic/pronounciation distance.</p>
+
+<p>What this blog post aims to do is to describe the rationale behind Eudex,
+hopefully sparking new ideas and thoughts for the reader.</p>
+
+<h1 id="the-output-and-the-input">The output and the input</h1>
+
+<p>So, the input is any Unicode string in a Latin-family alphabet.</p>
+
+<p>The output is fixed-width integer (we'll use 64-bit, but that is in some cases
+a very narrow width), which has following characteristic:</p>
+
+<blockquote>
+<p>If the string <span  class="math">\(a\)</span> sounds similar to a string <span  class="math">\(b\)</span>, <span  class="math">\(f(a) \oplus f(b)\)</span>
+has low Hamming weight.</p>
+</blockquote>
+
+<p>In other words, two similarly sounding words maps to numbers with only a few
+bits flipped, whereas words without similar sound maps to numbers with many
+bits flipped.</p>
+
+<h1 id="the-algorithm">The algorithm</h1>
+
+<p>The algorithm itself is fairly simple. It outputs an 8 byte array (an unsigned
+64 bit integer):</p>
+
+<p><span  class="math">\[\underbrace{A}_{\text{First phone}} \quad \underbrace{00}_{\text{Padding}} \quad \underbrace{BBBBB}_{\text{Trailing phones}}\]</span></p>
+
+<p>The crucial point here is that all the characters are mapped through a table
+carefully derived by their phonetic classification, to make similar sounding
+phones have a low Hamming distance.</p>
+
+<p>If two consecutive phones shares all the bits, but the parity bit, (i.e, <span  class="math">\(a \gg 1
+= b \gg 1\)</span>), the second is skipped. This allows us to &quot;collapse&quot; similar or
+equal phones into one, kind of equivalence to the collapse stage of Soundex:
+Similar phones next to each other can often be collapsed to one of the phones
+without losing the pronounciation.</p>
+
+<h1 id="deriving-the-tables">Deriving the tables</h1>
+
+<p>The tables are what makes it interesting. There are four tables: one for ASCII
+letters (not characters, letters) in the first slot ('A'), one for C1 (Latin
+Supplement) characters in the first slot, one for ASCII letters in the trailing
+phones, and one for the C1 (Latin Supplement) characters for the trailing
+phones.</p>
+
+<p>There is a crucial distinction between consonants and vowels in Eudex. The
+first phone treat vowels as first-class citizens by making distinctions between
+all the properties of vowels. The trailing phones only have a distinction
+between open and close vowels.</p>
+
+<h2 id="trailing-character-table">Trailing character table</h2>
+
+<p>Let's start with the tables for the trailing characters. Consonants' bytes are
+treated such that each bit represent a property of the phone (i.e.,
+pronunciation) with the exception of the rightmost bit, which is used for
+tagging duplicates (it acts as a discriminant).</p>
+
+<p>Let's look at the classification of IPA consonants:</p>
+
+<p><figure><img src="https://upload.wikimedia.org/wikipedia/en/5/5e/IPA_consonants_2005.png" alt="IPA"></figure></p>
+
+<p>As you may notice, characters often represent more than one phone, and
+reasoning about which one a given character in a given context represents can
+be very hard. So we have to do our best in fitting each character into the
+right phonetic category.</p>
+
+<p>We have to pick the classification intelligently. There are certain groups the
+table doesn't contain, one of which turns out to be handy in a classification:
+liquid consonants (lateral consonants + rhotics), namely <code>r</code> and <code>l</code>. Under
+ideal conditions, these should be put into to distinct bits, but unfortunately
+there are only 8 bits in a byte, so we have to limit ourselves.</p>
+
+<p>Now, every good phonetic hasher should be able to segregate important
+characters (e.g., hard to mispell, crucial to the pronunciation of the word)
+from the rest. Therefore we add a category we call &quot;confident&quot;, this will
+occupy the most significant bit. In our category of &quot;confident&quot; characters we
+put l, r, x, z, and q, since these are either:</p>
+
+<ol>
+<li>Crucial to the sound of the word (and thus easier to hear, and harder to
+misspell).</li>
+<li>Rare to occur, and thus statistically harder to mistake.</li>
+</ol>
+
+<p>So our final trailing consonant table looks like:</p>
+
+<table>
+<thead>
+<tr>
+<th>Position</th>
+<th align="right">Modifier</th>
+<th>Property</th>
+<th align="center">Phones</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>1</td>
+<td align="right">1</td>
+<td>Discriminant</td>
+<td align="center">(for tagging duplicates)</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td align="right">2</td>
+<td>Nasal</td>
+<td align="center">mn</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td align="right">4</td>
+<td>Fricative</td>
+<td align="center">fvsjxzhct</td>
+</tr>
+
+<tr>
+<td>4</td>
+<td align="right">8</td>
+<td>Plosive</td>
+<td align="center">pbtdcgqk</td>
+</tr>
+
+<tr>
+<td>5</td>
+<td align="right">16</td>
+<td>Dental</td>
+<td align="center">tdnzs</td>
+</tr>
+
+<tr>
+<td>6</td>
+<td align="right">32</td>
+<td>Liquid</td>
+<td align="center">lr</td>
+</tr>
+
+<tr>
+<td>7</td>
+<td align="right">64</td>
+<td>Labial</td>
+<td align="center">bfpv</td>
+</tr>
+
+<tr>
+<td>8</td>
+<td align="right">128</td>
+<td>Confident¹</td>
+<td align="center">lrxzq</td>
+</tr>
+</tbody>
+</table>
+
+<p>The more &quot;important&quot; the characteristic is to the phone's sound the higher
+place it has.</p>
+
+<p>We then have to treat the vowels. In particular, we don't care much of vowels
+in trailing position, so we will simply divide them into two categories: open
+and close. It is worth noting that not all vowels fall into these categories,
+therefore we will simply place it in the category it is &quot;nearest to&quot;, e.g. a,
+(e), o gets 0 for &quot;open&quot;.</p>
+
+<p>So our final ASCII letter table for the trailing phones looks like:</p>
+
+<pre><code>                (for consonants)
+      +--------- Confident
+      |+-------- Labial
+      ||+------- Liquid
+      |||+------ Dental
+      ||||+----- Plosive
+      |||||+---- Fricative
+      ||||||+--- Nasal
+      |||||||+-- Discriminant
+      ||||||||
+   a* 00000000
+   b  01001000
+   c  00001100
+   d  00011000
+   e* 00000001
+   f  01000100
+   g  00001000
+   h  00000100
+   i* 00000001
+   j  00000101
+   k  00001001
+   l  10100000
+   m  00000010
+   n  00010010
+   o* 00000000
+   p  01001001
+   q  10101000
+   r  10100001
+   s  00010100
+   t  00011101
+   u* 00000001
+   v  01000101
+   w  00000000
+   x  10000100
+   y* 00000001
+   z  10010100
+             |  (for vowels)
+             +-- Close
+</code></pre>
+
+<p>Now, we extend our table to C1 characters by the same method:</p>
+
+<pre><code>                (for consonants)
+      +--------- Confident
+      |+-------- Labial
+      ||+------- Liquid
+      |||+------ Dental
+      ||||+----- Plosive
+      |||||+---- Fricative
+      ||||||+--- Nasal
+      |||||||+-- Discriminant
+      ||||||||
+   ß  -----s-1  (use 's' from the table above with the last bit flipped)
+   à  00000000
+   á  00000000
+   â  00000000
+   ã  00000000
+   ä  00000000  [æ]
+   å  00000001  [oː]
+   æ  00000000  [æ]
+   ç  -----z-1  [t͡ʃ]
+   è  00000001
+   é  00000001
+   ê  00000001
+   ë  00000001
+   ì  00000001
+   í  00000001
+   î  00000001
+   ï  00000001
+   ð  00010101  [ð̠]   (represented as a non-plosive T)
+   ñ  00010111  [nj]  (represented as a combination of n and j)
+   ò  00000000
+   ó  00000000
+   ô  00000000
+   õ  00000000
+   ö  00000001  [ø]
+   ÷  11111111  (placeholder)
+   ø  00000001  [ø]
+   ù  00000001
+   ú  00000001
+   û  00000001
+   ü  00000001
+   ý  00000001
+   þ  -----ð--  [ð̠]   (represented as a non-plosive T)
+   ÿ  00000001
+             |  (for vowels)
+             +-- Close
+</code></pre>
+
+<h2 id="first-phone-table">First phone table</h2>
+
+<p>So far we have considered the trailing phones, now we need to look into the
+first phone. The first phone needs a table with minimal collisions, since you
+hardly ever misspell the first letter in the word. Ideally, the table should be
+injective, but due to technical limitations it is not possible.</p>
+
+<p>We will use the first bit to distinguish between vowels and consonants.</p>
+
+<p>Previously we have only divided vowels into to classes, we will change that
+now, but first: the consonants. To avoid repeating ourselves, we will use a
+method for reusing the above tables.</p>
+
+<p>Since the least important property is placed to the left, we will simply shift
+it to the right (that is, truncating the rightmost bit). The least significant
+bit will then be flipped when encountering a duplicate. This way we preserve
+the low Hamming distance, while avoiding collisions.</p>
+
+<p>The vowels are more interesting. We need a way to distinguish between vowels
+and their sounds.</p>
+
+<p>Luckily, their classification is quite simple:</p>
+
+<p><figure><img src="https://upload.wikimedia.org/wikipedia/en/5/5a/IPA_vowel_chart_2005.png" alt="IPA"></figure></p>
+
+<p>If a vowel appears as two phones (e.g., dependent on language), we OR them, and
+possibly modify the discriminant if it collides with another phone.</p>
+
+<p>We need to divide each of the axises into more than two categories, to utilize
+all our bits, so some properties will have to occupy multiple bits.</p>
+
+<table>
+<thead>
+<tr>
+<th>Position</th>
+<th align="right">Modifier</th>
+<th>Property (vowel)</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>1</td>
+<td align="right">1</td>
+<td>Discriminant</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td align="right">2</td>
+<td>Is it open-mid?</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td align="right">4</td>
+<td>Is it central?</td>
+</tr>
+
+<tr>
+<td>4</td>
+<td align="right">8</td>
+<td>Is it close-mid?</td>
+</tr>
+
+<tr>
+<td>5</td>
+<td align="right">16</td>
+<td>Is it front?</td>
+</tr>
+
+<tr>
+<td>6</td>
+<td align="right">32</td>
+<td>Is it close?</td>
+</tr>
+
+<tr>
+<td>7</td>
+<td align="right">64</td>
+<td>More close than [ɜ]</td>
+</tr>
+
+<tr>
+<td>8</td>
+<td align="right">128</td>
+<td>Vowel?</td>
+</tr>
+</tbody>
+</table>
+
+<p>So we make use of both properties, namely both the openness and &quot;frontness&quot;.
+Moreover, we allow more than just binary choices:</p>
+
+<pre><code> Class     Close       Close-mid  Open-mid    Open
+          +----------+----------+-----------+---------+
+ Bits      .11.....    ...11...   ......1.   .00.0.0.
+</code></pre>
+
+<p>Let's do the same for the other axis:</p>
+
+<pre><code> Class     Front       Central    Back
+          +----------+----------+----------+
+ Bits      ...1.0..    ...0.1..   ...0.0..
+</code></pre>
+
+<p>To combine the properties we OR these tables. Applying this technique, we get:</p>
+
+<pre><code>                (for vowels)
+      +--------- Vowel
+      |+-------- Closer than ɜ
+      ||+------- Close
+      |||+------ Front
+      ||||+----- Close-mid
+      |||||+---- Central
+      ||||||+--- Open-mid
+      |||||||+-- Discriminant
+      ||||||||
+   a* 10000100
+   b  00100100
+   c  00000110
+   d  00001100
+   e* 11011000
+   f  00100010
+   g  00000100
+   h  00000010
+   i* 11111000
+   j  00000011
+   k  00000101
+   l  01010000
+   m  00000001
+   n  00001001
+   o* 10010100
+   p  00100101
+   q  01010100
+   r  01010001
+   s  00001010
+   t  00001110
+   u* 11100000
+   v  00100011
+   w  00000000
+   x  01000010
+   y* 11100100
+   z  01001010
+</code></pre>
+
+<p>We then extend it to C1 characters:</p>
+
+<pre><code>      +--------- Vowel?
+      |+-------- Closer than ɜ
+      ||+------- Close
+      |||+------ Front
+      ||||+----- Close-mid
+      |||||+---- Central
+      ||||||+--- Open-mid
+      |||||||+-- Discriminant
+      ||||||||
+   ß  -----s-1 (use 's' from the table above with the last bit flipped)
+   à  -----a-1
+   á  -----a-1
+   â  10000000
+   ã  10000110
+   ä  10100110  [æ]
+   å  11000010  [oː]
+   æ  10100111  [æ]
+   ç  01010100  [t͡ʃ]
+   è  -----e-1
+   é  -----e-1
+   ê  -----e-1
+   ë  11000110
+   ì  -----i-1
+   í  -----i-1
+   î  -----i-1
+   ï  -----i-1
+   ð  00001011  [ð̠]   (represented as a non-plosive T)
+   ñ  00001011  [nj]  (represented as a combination of n and j)
+   ò  -----o-1
+   ó  -----o-1
+   ô  -----o-1
+   õ  -----o-1
+   ö  11011100  [ø]
+   ÷  11111111  (placeholder)
+   ø  11011101  [ø]
+   ù  -----u-1
+   ú  -----u-1
+   û  -----u-1
+   ü  -----y-1
+   ý  -----y-1
+   þ  -----ð--  [ð̠]   (represented as a non-plosive T)
+   ÿ  -----y-1
+</code></pre>
+
+<h1 id="distance-operator">Distance operator</h1>
+
+<p>Now that we have our tables. We now need the distance operator. A naïve
+approach would be to simply use Hamming distance. This has the disadvantage of
+all the bytes having the same weight, which isn't ideal, since you are more
+likely to misspell later characters, than the first ones.</p>
+
+<p>For this reason, we use weighted Hamming distance:</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">Byte:</th>
+<th align="right">1</th>
+<th align="right">2</th>
+<th align="right">3</th>
+<th align="right">4</th>
+<th align="right">5</th>
+<th align="right">6</th>
+<th align="right">7</th>
+<th align="right">8</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left">Weight:</td>
+<td align="right">128</td>
+<td align="right">64</td>
+<td align="right">32</td>
+<td align="right">16</td>
+<td align="right">8</td>
+<td align="right">4</td>
+<td align="right">2</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+
+<p>Namely, we XOR the two values and then add each of the bytes' Hamming weight,
+using the coefficients from the table above.</p>
+
+
+                <hr>
+                <i>Follow me on <a href="https://twitter.com/ticki_">Twitter</a> or <a href="https://github.com/ticki">Github</a>.</i>
+  			</section>
+
+  			<footer class="post-footer">
+  				<div class="post-tags">
+            
+            
+                <a href="http://ticki.github.io//tags/eudex/">eudex</a>
+            
+                <a href="http://ticki.github.io//tags/phonetics/">phonetics</a>
+            
+                <a href="http://ticki.github.io//tags/algorithms/">algorithms</a>
+            
+            
+  				</div>
+  				<div class="post-share">
+  					<a class="icon-twitter" href="https://twitter.com/share?text=The%20Eudex%20Algorithm&url=http%3a%2f%2fticki.github.io%2fblog%2fthe-eudex-algorithm%2f" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+  						<span>Twitter</span>
+  					</a>
+  					<a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fticki.github.io%2fblog%2fthe-eudex-algorithm%2f" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+  						<span>Facebook</span>
+  					</a>
+  					<a class="icon-gplus" href="https://plus.google.com/share?url=http%3a%2f%2fticki.github.io%2fblog%2fthe-eudex-algorithm%2f" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+  						<span>Google+</span>
+  					</a>
+  				</div>
+  			</footer>
+
+  			<aside class="post-comments">
+    
+    
+    <div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
+    
+</aside>
+
+
+			</div>
+
+			<nav class="post-nav">
+				
+					<a class="post-nav-item post-nav-next" href="http://ticki.github.io/blog/portfolio-of-logos-and-icons/">
+						<section class="post-nav-teaser">
+							<span class="post-nav-icon"><i class="icon-arrow-left"></i></span>
+							<span class="post-nav-info">
+								<h4 class="post-nav-title">Portfolio of Logos and Icons</h4>
+								<p class="post-nav-excerpt">This is a collection of some of the icons I&#39;ve made in the last year.&hellip;</p>
+							</span>
+						</section>
+					</a>
+				
+				
+					<a class="post-nav-item post-nav-prev" href="http://ticki.github.io/blog/seahash-explained/">
+						<section class="post-nav-teaser">
+							<span class="post-nav-icon"><i class="icon-arrow-right"></i></span>
+							<span class="post-nav-info">
+								<h4 class="post-nav-title">SeaHash: Explained</h4>
+								<p class="post-nav-excerpt">I explain how SeaHash works.&hellip;</p>
+							</span>
+						</section>
+					</a>
+				
+				<div class="clear"></div>
+			</nav>
+
+		</div>
+	</article>
+</main>
+
+				<div id="body-class" style="display: none;"></div>
+				<footer id="footer">
+					<section class="credits">
+						<span class="credits-theme">Theme <a href="https://github.com/zenithar/hugo-theme-bleak" target="_blank" rel="nofollow">Bleak</a> by <a href="http://zutrinken.com" target="_blank" rel="nofollow">zutrinken</a></span>
+						<span class="credits-software">Published with <a href="http://gohugo.io" target="_blank" rel="nofollow">Hugo</a></span>
+					</section>
+				</footer>
+				
+<div id="menu" data-target="menu">
+    <div class="menu-header">
+        <span class="menu-label">Menu</span>
+        <a class="menu-close" data-action="menu" data-target="menu"></a>
+    </div>
+
+    <div class="menu-list">
+        
+        
+        <li class="menu-list-item">
+            
+            <a class="home current js-ajax-link" href="/about/">About</a>
+        </li>
+        
+        
+        <li class="menu-list-item">
+            
+            <a class="home current js-ajax-link" href="https://github.com/ticki">GitHub</a>
+        </li>
+        
+        
+        <li class="menu-list-item">
+            
+            <a class="home current js-ajax-link" href="https://twitter.com/ticki_">Twitter</a>
+        </li>
+        
+    </div>
+
+</div>
+
+				
+<div id="tocMenu" data-target="toc">
+    <div class="menu-header">
+        <span class="menu-label">Menu</span>
+        <a class="menu-close" data-action="toc" data-target="toc"></a>
+    </div>
+    <div id="toc" class="menu-list">
+        
+    </div>
+</div>
+
+
+				<div class="overlay"></div>
+			</div>
+		</section>
+
+    <script>
+      (function(c,f){asyncLoader=function(i,h){i.foreach(function(k,j){e(j,d(j),h)});if(typeof h.callback=="function"){var g=setInterval(function(){if(f.readyState==="complete"){clearInterval(g);h.callback()}},10)}};var d=function(g){var h=g.split(".");return h[h.length-1]},e=function(h,i,g){switch(i){case"js":a(h,g);break;case"css":b(h);break;default:break}},a=function(i,h){var g=document.createElement("script");g.type="text/javascript";g.async=true;g.src=i;document.getElementsByTagName("head")[0].appendChild(g)},b=function(g){var h=document.createElement("link");h.type="text/css";h.rel="stylesheet";h.href=g;document.getElementsByTagName("head")[0].appendChild(h)};Array.prototype.foreach=function(h){for(var g=0;g<this.length;g++){h(g,this[g])}}})(this,document);
+
+      asyncLoader([
+				"/js/dependencies.js",
+				"/css/dependencies.css"
+      ],{
+        callback:function(){
+					asyncLoader([
+						"/css/style.css",
+						"/js/script.js"
+					], {
+						callback: function() {
+							$('body').fadeIn( 800 );
+						}
+					});
+        }
+      });
+
+</script>
+
+
+
+</body>
+</html>
+

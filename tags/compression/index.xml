@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>compression on Ticki&#39;s blog</title>
+    <link>http://ticki.github.io/tags/compression/</link>
+    <description>Recent content in compression on Ticki&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 11 Nov 2016 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://ticki.github.io/tags/compression/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Ternary as a prediction residue code</title>
+      <link>http://ticki.github.io/blog/ternary-as-a-prediction-residue-code/</link>
+      <pubDate>Fri, 11 Nov 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://ticki.github.io/blog/ternary-as-a-prediction-residue-code/</guid>
+      <description>If we look at how most lossless image compression formats works, they don&#39;t use deduplication compression (like LZ-class algorithms), because that&#39;s simply far from the nature of images. The same goes for audio and video. Instead, you have two maps:
+ The approximative map (\(a(\vec{v})\)): This should give a rough outline of the medium, that is, it is should predict predict the medium based on a small sequence of bytes (defined by the encoding).</description>
+    </item>
+    
+    <item>
+      <title>How LZ4 works</title>
+      <link>http://ticki.github.io/blog/how-lz4-works/</link>
+      <pubDate>Tue, 25 Oct 2016 23:25:15 +0200</pubDate>
+      
+      <guid>http://ticki.github.io/blog/how-lz4-works/</guid>
+      <description>LZ4 is a really fast compression algorithm with a reasonable compression ratio, but unfortunately there is limited documentation on how it works. The only explanation (not spec, explanation) can be found on the author&#39;s blog, but I think it is less of an explanation and more of an informal specification.
+This blog post tries to explain it such that anybody (even new beginners) can understand and implement it.
+Linear small-integer code (LSIC) The first part of LZ4 we need to explain is a smart but simple integer encoder.</description>
+    </item>
+    
+    <item>
+      <title>On Random-Access Compression</title>
+      <link>http://ticki.github.io/blog/on-random-access-compression/</link>
+      <pubDate>Sun, 23 Oct 2016 23:25:15 +0200</pubDate>
+      
+      <guid>http://ticki.github.io/blog/on-random-access-compression/</guid>
+      <description>This post will contains an algorithm I came up with, doing efficient rolling compression. It&#39;s going to be used in TFS.
+What is rolling compression? Consider that you have a large file and you want to compress it. That&#39;s easy enough and many algorithms exists for doing so. Now, consider that you want to read or write a small part of the file.
+Most algorithms would require you to decompress, write, and recompress the whole file.</description>
+    </item>
+    
+  </channel>
+</rss>
