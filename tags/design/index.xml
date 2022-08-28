@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Design on </title>
+    <link>/tags/design/</link>
+    <description>Recent content in Design on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 13 May 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/design/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>An Atomic Hash Table</title>
+      <link>/blog/an-atomic-hash-table/</link>
+      <pubDate>Sat, 13 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/an-atomic-hash-table/</guid>
+      <description>In programs where there is some kind of global state, you will often find the need for having a key-value map; you could for example imagine keeping some kind of cache of a bunch of entries from database table. Obviously, you&#39;d just use a hash table, easy right?
+Not really. Imagine that there is multiple threads. One approach is to wrap it in a mutex to ensure thread safety, but that would kind of miss the point of concurrency: It wouldn&#39;t be concurrent, it would just be blocking.</description>
+    </item>
+    
+    <item>
+      <title>You Are (Probably) Doing Login Systems Wrong</title>
+      <link>/blog/you-are-probably-doing-login-systems-wrong/</link>
+      <pubDate>Fri, 12 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/you-are-probably-doing-login-systems-wrong/</guid>
+      <description>A thing, most programmers have tried at least once, is login systems. Despite being seemingly a simple task, it is in fact very hard to do right.
+So, let&#39;s look into, how we can actually do this right.
+Storing passwords Okay, this is common knowledge: Salt and hash your passwords.
+However, it is often done wrong. You&#39;ll see code like:
+hash(password + salt)  This is better than unsalted, unhashed passwords, but it&#39;s far from bruteforce resistant.</description>
+    </item>
+    
+    <item>
+      <title>Portfolio of Logos and Icons</title>
+      <link>/blog/portfolio-of-logos-and-icons/</link>
+      <pubDate>Mon, 19 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/portfolio-of-logos-and-icons/</guid>
+      <description>This is a collection of the logos and icons, I created (and used/not drafts) during the last years.
+Open-Sea Open Sea is a dead game project I was working on:
+          Simple pixel art. Stylistic and minimalistic text. Simple icon similar to the graphics in the game.  Redox Redox is an operating-system I work on. The icon was one of the first things I contributed to Redox (before code):</description>
+    </item>
+    
+  </channel>
+</rss>

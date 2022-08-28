@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Optimizations on </title>
+    <link>/tags/optimizations/</link>
+    <description>Recent content in Optimizations on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 17 Sep 2016 13:46:49 +0200</lastBuildDate>
+    
+	<atom:link href="/tags/optimizations/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Skip Lists: Done Right</title>
+      <link>/blog/skip-lists-done-right/</link>
+      <pubDate>Sat, 17 Sep 2016 13:46:49 +0200</pubDate>
+      
+      <guid>/blog/skip-lists-done-right/</guid>
+      <description>What is a skip list? In short, skip lists are a linked-list-like structure which allows for fast search. It consists of a base list holding the elements, together with a tower of lists maintaining a linked hierarchy of subsequences, each skipping over fewer elements.
+Skip list is a wonderful data structure, one of my personal favorites, but a trend in the past ten years has made them more and more uncommon as a single-threaded in-memory structure.</description>
+    </item>
+    
+  </channel>
+</rss>

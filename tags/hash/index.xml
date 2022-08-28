@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hash on </title>
+    <link>/tags/hash/</link>
+    <description>Recent content in Hash on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 04 Nov 2016 16:28:44 +0200</lastBuildDate>
+    
+	<atom:link href="/tags/hash/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Designing a good non-cryptographic hash function</title>
+      <link>/blog/designing-a-good-non-cryptographic-hash-function/</link>
+      <pubDate>Fri, 04 Nov 2016 16:28:44 +0200</pubDate>
+      
+      <guid>/blog/designing-a-good-non-cryptographic-hash-function/</guid>
+      <description>So, I&#39;ve been needing a hash function for various purposes, lately. None of the existing hash functions I could find were sufficient for my needs, so I went and designed my own. These are my notes on the design of hash functions.
+What is a hash function really? Hash functions are functions which maps a infinite domain to a finite codomain. Two elements in the domain, \(a, b\) are said to collide if \(h(a) = h(b)\).</description>
+    </item>
+    
+  </channel>
+</rss>

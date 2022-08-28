@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cryptography on </title>
+    <link>/tags/cryptography/</link>
+    <description>Recent content in Cryptography on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 12 May 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/cryptography/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>You Are (Probably) Doing Login Systems Wrong</title>
+      <link>/blog/you-are-probably-doing-login-systems-wrong/</link>
+      <pubDate>Fri, 12 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/you-are-probably-doing-login-systems-wrong/</guid>
+      <description>A thing, most programmers have tried at least once, is login systems. Despite being seemingly a simple task, it is in fact very hard to do right.
+So, let&#39;s look into, how we can actually do this right.
+Storing passwords Okay, this is common knowledge: Salt and hash your passwords.
+However, it is often done wrong. You&#39;ll see code like:
+hash(password + salt)  This is better than unsalted, unhashed passwords, but it&#39;s far from bruteforce resistant.</description>
+    </item>
+    
+    <item>
+      <title>A general construction for rolling hash functions</title>
+      <link>/blog/a-general-construction-for-rolling-hash-functions/</link>
+      <pubDate>Thu, 02 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/a-general-construction-for-rolling-hash-functions/</guid>
+      <description>What is a rolling hash function? A hash function is a function \(h : S^\times \to F\) with \(S, F\) being some finite sets.
+A rolling hash function is really a set of functions \((h, u)\), where \(u\) allows retroactively updated a symbol
+\[h(\ldots a \ldots) \mapsto h(\ldots a&#39; \ldots)\]
+To put it more formally, a rolling hash function has an associated function \(u : F \times S^2 \times \mathbb N \to F\), satisfying</description>
+    </item>
+    
+  </channel>
+</rss>

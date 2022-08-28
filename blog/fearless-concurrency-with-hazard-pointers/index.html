@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.53" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Fearless concurrency with hazard pointers &middot; </title>
+  <meta name="description" content="This blog post presents `conc`, a hazard pointer-based memory reclaimation system for concurrent programs." />
+
+  
+  <link type="text/css" rel="stylesheet" href="/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  
+</head>
+
+  <body class=" ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="/"><h1></h1></a>
+      <p class="lead">
+       Warning: This is the blog I wrote as a kid. Most of what is written here is probably wrong. 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="/">Home</a> </li>
+        <li><a href="/about/"> About </a></li><li><a href="https://github.com/ticki"> GitHub </a></li>
+      </ul>
+    </nav>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>Fearless concurrency with hazard pointers</h1>
+  <time datetime=2017-08-02T00:00:00Z class="post-date">Wed, Aug 2, 2017</time>
+  <p>For those who don't know, I am working on a file system, <a href="https://github.com/redox-os/tfs">TFS</a>, which employs various concurrent structures to improve performance. Whenever you do this kind of advanced concurrency, you will meet the ABA problem, roughly describable as &quot;what if another thread runs the destructor on a value you are reading?&quot;</p>
+
+<p>What this problem is, and how can it be solved, is what this blog post will investigate. It presents a form of an optimized form of hazard-pointers as well as an implementation thereof.</p>
+
+<h1 id="the-problem">The problem</h1>
+
+<p>The problem is a lot harder than it seems at first, because you can't always replace the pointer atomically. In particular, you will often have more threads reading a single value. If one thread destroys it while other threads reads it, you get safety issues.</p>
+
+<p>To illustrate, we implement a very simple form of <a href="https://en.wikipedia.org/wiki/Software_transactional_memory">Software Transactional Memory (STM)</a>. The idea is that we read a pointer, dereference it, apply some function to the data, and then try to update the pointer. We repeat these steps until it succeeds:</p>
+
+<pre><code class="language-rust">use std::sync::atomic::AtomicPtr;
+
+/// A software transactional memory container.
+pub struct Stm&lt;T&gt; {
+    /// The inner data.
+    inner: AtomicPtr&lt;T&gt;,
+}
+
+impl&lt;T&gt; Stm&lt;T&gt; {
+    /// Create a new STM container.
+    pub fn new(data: T) -&gt; Stm&lt;T&gt; {
+        Stm {
+            inner: AtomicPtr::new(Box::into_raw(Box::new(data))),
+        }
+    }
+
+    /// Update the data.
+    ///
+    /// This applies closure `f` to the data of `self`. If the data isn't updated in the meantime,
+    /// the change will applied. Otherwise, the closure is reevaluated.
+    pub fn update&lt;F&gt;(&amp;self, f: F)
+    where
+        F: Fn(Option&lt;T&gt;) -&gt; Option&lt;T&gt;,
+        T: 'static,
+    {
+        loop {
+            // Read a snapshot of the current data.
+            let snapshot = self.inner.load(atomic::Ordering::Acquire);
+            // Evaluate the closure on the snapshot.
+            let ret = Box::into_raw(Box::new(f(*snapshot)));
+
+            // If the snapshot pointer is still the same, update the data to the closure output.
+            if self.inner.compare_and_store(snapshot, ret, atomic::Ordering::Release) == snapshot {
+                // Drop the now-replaced snapshot.
+                drop(Box::from_raw(snapshot));
+                break;
+            }
+        }
+    }
+}
+</code></pre>
+
+<p>There is a very critical bug in the above code. Look closely: Imagine thread A reads a snapshot, then thread B reads the same pointer and runs the closure, does the CAS, and destroys the old snapshot, which is being read by thread A causing a use-after-free:</p>
+
+<table>
+<thead>
+<tr>
+<th>THREAD A</th>
+<th>THREAD B</th>
+<th>NOTES</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td></td>
+<td><code>let snapshot = self.inner.load(atomic::Ordering::Acquire);</code></td>
+<td>Reading pointer A</td>
+</tr>
+
+<tr>
+<td><code>let snapshot = self.inner.load(atomic::Ordering::Acquire);</code></td>
+<td></td>
+<td>Reading pointer A</td>
+</tr>
+
+<tr>
+<td><code>let ret = Box::into_raw(Box::new(f(*snapshot)));</code></td>
+<td></td>
+<td>Dereferencing A</td>
+</tr>
+
+<tr>
+<td>...</td>
+<td></td>
+<td>Skipping some lines</td>
+</tr>
+
+<tr>
+<td><code>drop(Box::from_raw(snapshot))</code></td>
+<td></td>
+<td>Dropping A</td>
+</tr>
+
+<tr>
+<td></td>
+<td><code>let ret = Box::into_raw(Box::new(f(*snapshot)));</code></td>
+<td>Dereferencing A which is dropped</td>
+</tr>
+</tbody>
+</table>
+
+<p>If you remove the line with <code>drop()</code>, the code is safe, but it leaks memory, which is obviously unwanted, especially if you update the STM millions of times.</p>
+
+<p>This roughly describes the ABA problem, a problem which you will run into if you implement virtually any non-trivial concurrent/lock-less data structure. It is unavoidable, and thus it is important to have a strong memory reclamation system at hands.</p>
+
+<h1 id="concurrent-memory-reclamation">Concurrent memory reclamation</h1>
+
+<p>&quot;Concurrent memory reclamation systems&quot; names the class of systems which solves this problem. Often, they manage a queue of garbage objects, and a system that determines what garbage can be destroyed. Since this is a problem, which is pretty core to concurrent program, there are several of such concurrent memory reclamation systems.</p>
+
+<p>In some languages (e.g. Java), they are implemented into the language itself, in the form of garbage collectors.</p>
+
+<p>This blog post describes a runtime-less (in the sense that it doesn't require the language to implement a runtime) solution.</p>
+
+<h1 id="deferred-destruction">Deferred destruction</h1>
+
+<p>The first mechanism, we will explore, is <em>deferred destruction</em>. The idea is that we have a queue of garbage to be destroyed, which is shared among all threads. The queue is a simple MPSC channel, where the sender is shared among all the threads and the receiver is protected behind a mutex. Various messages (hereunder adding garbage to be destroyed) can then be passed to the garbage collector.</p>
+
+<p>The idea behind deferring destructors is that we get to choose under what conditions an object can be destroyed. If an object is being read, the garbage collector will skip it until next collection cycle.</p>
+
+<p>The garbage collection is simply run randomly according to some probability distribution (to avoid more communication than necessary). If another thread is GC-ing, we skip the cycle.</p>
+
+<p><figure><img src="/img/conc_timeline_diagram.svg" alt="A timeline"></figure></p>
+
+<p>Above diagram shows a timeline where three threads reads values (represented by black lines), then a thread adds the pointer to the garbage (represented by the trashcan), and finally the pointer is destroyed in garbage collection (represented by the recycle symbol).</p>
+
+<p>A very important rule must be followed when adding garbage: After the garbage is added (the destruction is planned), there must be no way of starting new readers. In the diagram, this is describes as after the trashcan, there can be no black lines that starts (but keep in mind, existing lines can continue, like the one in thread B above the trashcan).</p>
+
+<p>If this rule was not followed, we could create new readers after the destructor was run, thus causing use-after-free. The enforcement ultimately lies on the programmer, but - as we get back to - we provide various APIs to do all this safely.</p>
+
+<h1 id="garbage">Garbage</h1>
+
+<p>To be able to have a queue of garbage, we need a way of representing garbage. There are two components in our representation:</p>
+
+<ol>
+<li>A pointer to the object it represents.</li>
+<li>A virtual function to the destructor, which takes the pointer as argument.</li>
+</ol>
+
+<p>Destroying this garbage is as simple as it seems: You take the pointer and gives it as argument to the virtual function.</p>
+
+<h1 id="hazards">Hazards</h1>
+
+<p>A hazard pointer is supposed to tell the garbage collector that the destruction shall be delayed as the pointer is currently in use.</p>
+
+<p>Hazard pointers are shared between two ends, together making a hazard pair. Namely, one side (the writer side) sets the state and &quot;controls&quot; the pointer, while another controls the garbage collector and uses the information given through the hazard pointer to determine what objects may be destroyed.</p>
+
+<p>A hazard pair is nothing but a shared pointer to a heap allocated state. A hazard pair has four possible states:</p>
+
+<p><figure><img src="/img/conc_types_diagram.svg" alt="A diagram showing the hazard types."></figure></p>
+
+<p>For now, ignore the &quot;thread-local&quot; collumn, we'll get back to that later.</p>
+
+<p>Each state represents the hazard's &quot;message&quot; to the garbage collector:</p>
+
+<ol>
+<li><code>Blocked</code>: the hazard will eventually go into another state, but it doesn't know which one yet. When the reader reads this state, it is instructed to re-read the hazard until it is in another state. It is necessary when reading the pointer that shall be protected, as garbage collection between the pointer being reading the pointer and setting the hazard will invalidate the pointer.</li>
+<li><code>Protect(x)</code>: protect the pointer <code>x</code> from being garbage collected. For example, if the writer side sets the hazard state to <code>Protect(ptr)</code>, the garbage collector reads all the hazard (it owns the reader side of all the hazards) and determines what garbage can't be destroyed yet (that is, the garbage which is protected by hazards) and what can.</li>
+<li><code>Free</code>: the hazard is inactive and can be reused later on (the importance of this state is covered later).</li>
+<li><code>Dead</code>: the thread that used the hazard is gone and the hazard won't be used anymore. This marks it lacks a writer, and thus the reader can safely deallocate the hazard.</li>
+</ol>
+
+<h1 id="threadlocal-caching-of-garbage">Thread-local caching of garbage</h1>
+
+<p>Since passing messages between threads is expensive, it makes sense to bundle them up to reduce the overhead. What we do is to let each thread hold a queue of garbage:</p>
+
+<p><figure><img src="/img/conc_garbage_diagram.svg" alt="Garbage stores"></figure></p>
+
+<p>Since only the global garbage collector can actually destroy garbage (as it is the only one that has the necessary information), we must propagate garbage through it eventually. We simply have following behavior: When a thread local garbage queue becomes too long, the garbage is exported to the global queue, which means it can eventually be garbage collected.</p>
+
+<p>(to be clear: the garbage collector doesn't represent a thread, but a global state which can be accessed through locking a mutex)</p>
+
+<h1 id="threadlocal-caching-of-hazards">Thread-local caching of hazards</h1>
+
+<p>Since hazard pair creation requires sending a message over a channel to the global garbage collector, there is an unnecessary overhead in not reusing hazard pairs. To solve this, we let each thread have a thread-local cache of the available recyclable hazards:</p>
+
+<p><figure><img src="/img/conc_stores_diagram.svg" alt="The different hazard stores"></figure></p>
+
+<p>This is where <code>Free</code> state comes into the image: Clearly, if we need to reuse hazards, we need an inactive state other than <code>Dead</code>; we need a way to mark that a hazard is not currently in use, but it might be in the future.</p>
+
+<p>So how do we manage the states of the hazards in the thread-local cache? Clearly, if we let the states stand unchanged, it would accumulate hazards making garbage collection impossible until the thread exits.</p>
+
+<p>We could set the state of the hazard to <code>Free</code>, when it is added to the cache. However that would be expensive and unnecessary. We can soundly store non-free hazards in the cache, as long as we require them to be non-<code>Blocked</code>. However, we want to solve the unbounded accumulation issue.</p>
+
+<p>The way we do this is by setting a limit on the number of non-free hazards. When this limit is exceeded, the non-free hazards are set to <code>Free</code>. Ideally, this should happen relatively rarely, so most of the time, the hazard will just go straight into reuse.</p>
+
+<p>If we briefly revisit the earlier diagram, we will note how the different hazard variants has their own places, where the reader belong. For example, <code>Blocked</code> can only be on user-side, because otherwise it would cause deadlock, whereas <code>Protect</code> can appear in both user-side and thread-local cache:</p>
+
+<p><figure><img src="/img/conc_types_diagram.svg" alt="A diagram showing the hazard types."></figure></p>
+
+<h1 id="conc-and-api-design"><code>conc</code> and API design</h1>
+
+<p>What I described above is implemented in my crate <a href="https://docs.rs/conc"><code>conc</code></a>, but very little of what I described above is actually exposed API-wise. It is merely its internal mechanics.</p>
+
+<p>The API exposed is much simpler, but it is free as an abstraction. You can add garbage through a simple method <code>add_garbage()</code> which takes the two parameters, and the hazard pointers are exposed in the form of a wrapper type called <code>Guard&lt;T&gt;</code>.</p>
+
+<p>What <code>Guard</code> does is acting like a pointer, which simultaneously holds the reader end of the hazard, which protects the pointer. Creation of this type is done through a method, <code>Guard::new()</code>, which takes a closure. Before it runs the closure, it does a critical thing: It creates a blocked hazard, meaning that you can safely read from e.g. atomic pointers in the closure, without fearing the garbage collector deallocating it meanwhile.</p>
+
+<p>Everything else is being handled for you. You can force garbage collection yourself (i.e. <code>conc::gc()</code>), but you don't have to. Caching, hazard writers, everything is built into the system and is handled for you without additional overhead. The only two API interfaces are for adding garbage and protecting garbage.</p>
+
+<h2 id="atomict"><code>Atomic&lt;T&gt;</code></h2>
+
+<p>Since it quickly gets messy handling destructors yourself, it also exposes <code>Atomic&lt;T&gt;</code>, a bit of a hybrid between <code>Box&lt;T&gt;</code>, <code>Option&lt;T&gt;</code>, and <code>AtomicPtr&lt;T&gt;</code>. What it does is really simple: It allows you to store a (nullable) pointer to some data, which can be safely read without removing it from the structure. On top of that, it exposes various atomic operations such as compare-and-swap, making it a quite powerful primitive.</p>
+
+<p>It means that a large part of the use cases are actually covered in a very intuitive and simple API, so you can get running without much boilerplate.</p>
+
+<h2 id="sync"><code>sync</code></h2>
+
+<p><code>sync</code> implements various data structures like stacks and locks. Currently, there are only two. Feel free to contribute more.</p>
+
+<h2 id="debugging-tools">Debugging tools</h2>
+
+<p>There is a few debugging tools included, which can be enabled by enabling a feature and setting an environment variable (refer to the docs). This allows one to debug a data structure by tracing its call.</p>
+
+<p>Several debug assertions are built into the library, making it catch several different forms of erroneous usage.</p>
+
+<h2 id="internal-api">Internal API</h2>
+
+<p>The internal API is a whole other story.</p>
+
+<p>Hazards are divided into two parts: <code>Reader</code> and <code>Writer</code> representing respective sides of the pair. Each of these implements methods in accordance with their allowed behavior. For example, <code>Reader</code> has <code>destroy()</code> and <code>get()</code>, and <code>Writer</code> has <code>free()</code>, <code>protect()</code> among more. The hazard pairs share a pointer to a heap allocated <code>AtomicPtr</code>, but the special states (<code>Blocked</code>, <code>Dead</code>, <code>Free</code>) are implemented in a sneaky way: To avoid colliding with other values, it reserves pointers for these states by having static variables, making it resistance to people using trap pointers like 0x1 or similar.</p>
+
+<p>The API is divided into two main states: <code>local</code> and <code>global</code>, representing the thread-local state and the process-wide state respectively.</p>
+
+<p>The local state is stored in a thread-local variable, which keeps the non-exported garbage and the available hazards. The garbage is regularly exported to the global state, and force export can be done through <code>local::export_garbage()</code>.</p>
+
+<p>Secondly, the global state has two parts:</p>
+
+<ul>
+<li>The sender part of the message passing channel.</li>
+<li>The garbo part.</li>
+</ul>
+
+<p>The &quot;garbo&quot; represents the garbage collector and is protected behind a mutex. It stores the other part of the channel, allowing it to receive messages. It also holds the global (exported) garbage and the hazard readers of all the thread.</p>
+
+<p>To know when to garbage collect, <code>global::tick()</code> exist. This is called when new garbage is added among other things. What it does is essentially to generate a random number and see if it below a certain limit, in which case it tries to GC. That is, it corresponds to a randomly deciding whether or not to garbage collect.</p>
+
+<h1 id="compared-to-epochs">Compared to epochs</h1>
+
+<p>Epoch-based reclamation or EBR is another popular way of doing concurrent memory reclamation.</p>
+
+<p>The architectural difference is in how destruction is deferred. EBR blocks all the objects from the epoch from being collected, whereas hazard pointers is more fine grained in its behavior. It does it on an object-to-object basis.</p>
+
+<p>This approach is necessarily slower than EBR as described in <a href="https://aturon.github.io/blog/2015/08/27/epoch/">aturon's</a> blog post. There is however a serious problem with epochs in some cases: Memory blowup, which happens when several threads constantly reads and writes, blocking garbage collection indefinitely and thus causing very high memory usage, if not out-of-memory. This issue isn't in hazards (like this design).</p>
+
+<p>There are some other advantages as well:</p>
+
+<ul>
+<li>It is less memory hungry.</li>
+<li>It is more general-purpose. What makes it more general is the fact that there is no lifetime in the <code>Guard</code> type, which means that it can exist for an arbitrary amount of time, making it usable for more-or-less anything.</li>
+<li>It is compatible with things like futures, where you can't be bound to a lifetime.</li>
+<li>The API is simpler from the user's perspective (that is, it is simpler to deal with as a user of a library which depends on <code>conc</code>), as you don't need to add it as dependency (which you do in <code>crossbeam</code>, where the call-side must call <code>epoch::pin()</code>).
+
+<ul>
+<li>It implements <code>Guard::map()</code> which allows a library to expose e.g. a particular field of the <code>Guard</code>'s content.</li>
+</ul></li>
+</ul>
+
+<h1 id="fixed-example">Fixed example</h1>
+
+<p>I want to round off with a fixed version of the example, I started out with. Below is seen a sound and safe implementation of STM through the <code>conc</code> library:</p>
+
+<pre><code class="language-rust">/// A software transactional memory container.
+pub struct Stm&lt;T&gt; {
+    /// The inner data.
+    inner: Atomic&lt;T&gt;,
+}
+
+impl&lt;T&gt; Stm&lt;T&gt; {
+    /// Create a new STM container.
+    pub fn new(data: Option&lt;Box&lt;T&gt;&gt;) -&gt; Stm&lt;T&gt; {
+        Stm {
+            inner: Atomic::new(data),
+        }
+    }
+
+    /// Update the data.
+    ///
+    /// This applies closure `f` to the data of `self`. If the data isn't updated in the meantime,
+    /// the change will applied. Otherwise, the closure is reevaluated.
+    pub fn update&lt;F&gt;(&amp;self, f: F)
+    where
+        F: Fn(Option&lt;Guard&lt;T&gt;&gt;) -&gt; Option&lt;Box&lt;T&gt;&gt;,
+        T: 'static,
+    {
+        loop {
+            // Read a snapshot of the current data.
+            let snapshot = self.inner.load(atomic::Ordering::Acquire);
+            // Construct a pointer from this guard.
+            let snapshot_ptr = snapshot.as_ref().map(Guard::as_ptr);
+            // Evaluate the closure on the snapshot.
+            let ret = f(snapshot);
+
+            // If the snapshot pointer is still the same, update the data to the closure output.
+            if self.inner.compare_and_store(snapshot_ptr, ret, atomic::Ordering::Release).is_ok() {
+                break;
+            }
+        }
+    }
+}
+</code></pre>
+
+<p>Note how there is not a line of unsafe code in the above code block, which is a neat consequence of the API choices of <code>conc</code>.</p>
+
+</div>
+
+
+    </main>
+
+    
+      
+    
+  </body>
+</html>

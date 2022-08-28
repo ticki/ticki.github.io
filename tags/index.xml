@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on </title>
+    <link>/tags/</link>
+    <description>Recent content in Tags on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 14 Sep 2016 22:50:08 +0200</lastBuildDate>
+    
+	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>About</title>
+      <link>/tags/about/</link>
+      <pubDate>Wed, 14 Sep 2016 22:50:08 +0200</pubDate>
+      
+      <guid>/tags/about/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Algorithms</title>
+      <link>/tags/algorithms/</link>
+      <pubDate>Sun, 11 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/algorithms/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Atomic</title>
+      <link>/tags/atomic/</link>
+      <pubDate>Sat, 13 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/atomic/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Collection</title>
+      <link>/tags/collection/</link>
+      <pubDate>Mon, 19 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/collection/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Compression</title>
+      <link>/tags/compression/</link>
+      <pubDate>Tue, 25 Oct 2016 23:25:15 +0200</pubDate>
+      
+      <guid>/tags/compression/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Computer Science</title>
+      <link>/tags/computer-science/</link>
+      <pubDate>Thu, 16 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/computer-science/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Concurrency</title>
+      <link>/tags/concurrency/</link>
+      <pubDate>Wed, 02 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/concurrency/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Cryptography</title>
+      <link>/tags/cryptography/</link>
+      <pubDate>Fri, 12 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/cryptography/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Data</title>
+      <link>/tags/data/</link>
+      <pubDate>Tue, 25 Oct 2016 23:25:15 +0200</pubDate>
+      
+      <guid>/tags/data/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Data Structures</title>
+      <link>/tags/data-structures/</link>
+      <pubDate>Thu, 16 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/data-structures/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Design</title>
+      <link>/tags/design/</link>
+      <pubDate>Sat, 13 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/design/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Eudex</title>
+      <link>/tags/eudex/</link>
+      <pubDate>Sun, 11 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/eudex/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Explanation</title>
+      <link>/tags/explanation/</link>
+      <pubDate>Tue, 25 Oct 2016 23:25:15 +0200</pubDate>
+      
+      <guid>/tags/explanation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Graphics</title>
+      <link>/tags/graphics/</link>
+      <pubDate>Mon, 19 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/graphics/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Hash</title>
+      <link>/tags/hash/</link>
+      <pubDate>Fri, 04 Nov 2016 16:28:44 +0200</pubDate>
+      
+      <guid>/tags/hash/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Hash Functions</title>
+      <link>/tags/hash-functions/</link>
+      <pubDate>Thu, 02 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/hash-functions/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Hashing</title>
+      <link>/tags/hashing/</link>
+      <pubDate>Thu, 08 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/hashing/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Hazard Pointers</title>
+      <link>/tags/hazard-pointers/</link>
+      <pubDate>Wed, 02 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/hazard-pointers/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Introduction</title>
+      <link>/tags/introduction/</link>
+      <pubDate>Wed, 14 Sep 2016 22:50:08 +0200</pubDate>
+      
+      <guid>/tags/introduction/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Linux</title>
+      <link>/tags/linux/</link>
+      <pubDate>Tue, 30 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/linux/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Lz4</title>
+      <link>/tags/lz4/</link>
+      <pubDate>Tue, 25 Oct 2016 23:25:15 +0200</pubDate>
+      
+      <guid>/tags/lz4/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Notes</title>
+      <link>/tags/notes/</link>
+      <pubDate>Tue, 30 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/notes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Optimizations</title>
+      <link>/tags/optimizations/</link>
+      <pubDate>Sat, 17 Sep 2016 13:46:49 +0200</pubDate>
+      
+      <guid>/tags/optimizations/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Personal</title>
+      <link>/tags/personal/</link>
+      <pubDate>Wed, 14 Sep 2016 22:50:08 +0200</pubDate>
+      
+      <guid>/tags/personal/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Phonetics</title>
+      <link>/tags/phonetics/</link>
+      <pubDate>Sun, 11 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/phonetics/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Programming</title>
+      <link>/tags/programming/</link>
+      <pubDate>Wed, 02 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/programming/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Rust</title>
+      <link>/tags/rust/</link>
+      <pubDate>Thu, 06 Oct 2016 10:12:22 +0200</pubDate>
+      
+      <guid>/tags/rust/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Skip Lists</title>
+      <link>/tags/skip-lists/</link>
+      <pubDate>Sat, 17 Sep 2016 13:46:49 +0200</pubDate>
+      
+      <guid>/tags/skip-lists/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Systems</title>
+      <link>/tags/systems/</link>
+      <pubDate>Wed, 02 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/systems/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Termion</title>
+      <link>/tags/termion/</link>
+      <pubDate>Thu, 06 Oct 2016 10:12:22 +0200</pubDate>
+      
+      <guid>/tags/termion/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Tui</title>
+      <link>/tags/tui/</link>
+      <pubDate>Thu, 06 Oct 2016 10:12:22 +0200</pubDate>
+      
+      <guid>/tags/tui/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

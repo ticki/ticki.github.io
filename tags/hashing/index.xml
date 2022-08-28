@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hashing on </title>
+    <link>/tags/hashing/</link>
+    <description>Recent content in Hashing on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 08 Dec 2016 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/hashing/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>SeaHash: Explained</title>
+      <link>/blog/seahash-explained/</link>
+      <pubDate>Thu, 08 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/seahash-explained/</guid>
+      <description>So, not so long ago, I designed SeaHash, an alternative hash algorithm with performance better than most (all?) of the existing non-cryptographic hash functions available. I designed it for checksumming for a file system, I&#39;m working on, but I quickly found out it was sufficient for general hashing.
+It blew up. I got a lot of cool feedback, and yesterday it was picked as crate of the week. It shows that there is some interest in it, so I want to explain the ideas behind it.</description>
+    </item>
+    
+  </channel>
+</rss>

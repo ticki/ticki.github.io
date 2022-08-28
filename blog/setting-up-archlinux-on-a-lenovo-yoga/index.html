@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.53" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Setting up ArchLinux on a Lenovo Yoga &middot; </title>
+  <meta name="description" content="A tutorial-ish bunch of notes on Linux on Lenovo Yoga." />
+
+  
+  <link type="text/css" rel="stylesheet" href="/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  
+</head>
+
+  <body class=" ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="/"><h1></h1></a>
+      <p class="lead">
+       Warning: This is the blog I wrote as a kid. Most of what is written here is probably wrong. 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="/">Home</a> </li>
+        <li><a href="/about/"> About </a></li><li><a href="https://github.com/ticki"> GitHub </a></li>
+      </ul>
+    </nav>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>Setting up ArchLinux on a Lenovo Yoga</h1>
+  <time datetime=2017-05-30T00:00:00Z class="post-date">Tue, May 30, 2017</time>
+  <p>So, I recently broke my computer by spilling tea unto it, so I needed a new
+computer, and found the Lenovo Yoga 710, which is pretty lightweight and yet
+strong. As the resources on installing Linux (ArchLinux specifically) on this
+machine are barely existing, I thought I had to make this post, explaining
+various critical thing about the installation.</p>
+
+<p>Bear in mind that all this is made from notes and what I recall from when I
+installed it (yesterday), so there might be minor inaccuracies.</p>
+
+<h1 id="goals">Goals</h1>
+
+<p>The goal is to get started with a system, which is fully encrypted, supports
+wifi, sounds and is usable in general.</p>
+
+<p>There might be things, which I will not cover. In that case, the ArchLinux wiki
+is your friend.</p>
+
+<h1 id="creating-the-arch-usb-flash-media">Creating the Arch USB flash media</h1>
+
+<p>Grab the torrent from <a href="https://archlinux.org">their website</a> and load it onto
+an USB flash. Refer to
+<a href="https://wiki.archlinux.org/index.php/Category:Getting_and_installing_Arch">this</a>
+for details.</p>
+
+<h1 id="booting-to-the-flash-media">Booting to the flash media</h1>
+
+<p>You will likely initially have Windows installed on the machine. Due to
+fastboot, you must do some special steps to close it. In particular, you need
+to hold down shift while clicking &quot;shutdown&quot;.</p>
+
+<p>Before we boot to our flash, you must enable legacy booting. This is done by
+entering the UEFI menu, by holding down F2 while you start the computer. An
+interface should appear, navigate to the tab that says something like &quot;Boot&quot;.
+Then enable all the options with &quot;legacy booting&quot; or &quot;legacy USB&quot; or similar.</p>
+
+<p>Now, you can save the settings and restart the computer with the USB flash in
+it. While you start the computer, hold down F12, which will cause a menu of
+bootable devices to show up.</p>
+
+<p>Hopefully, the flash drive should appear. Select this, and you should start up.</p>
+
+<h1 id="getting-internet-connection">Getting internet connection</h1>
+
+<p>To get any further, you need to connect to the internet. You can either use
+Ethernet cable (assuming you have an adapter, as the machine in question has no
+ethernet port) or use Wifi, as I explain below.</p>
+
+<p>Write <code>wifi-menu</code> and you should get a TUI-like interface allowing you to
+choose your network. This should etablish connection to the internet.</p>
+
+<p>To test the internet connection, do <code>ping google.com</code>.</p>
+
+<h1 id="setting-up-the-partitions">Setting up the partitions</h1>
+
+<p>Now, we want to set up the disk, which we will install ArchLinux on. This
+disk must first be properly partitioned for the usage.</p>
+
+<p>I will assume your disk is <code>/dev/sda</code> for now. If not, substitute this with the
+disk, you want to install Arch on (if you don't know which disk, try to run
+<code>fdisk -l</code> and see if that solves your question).</p>
+
+<p>To create the partitions, we use the cgdisk utility:</p>
+
+<pre><code>cgdisk /dev/sda
+</code></pre>
+
+<p>This should give you a TUI. Delete all the existing partitions, and create the
+following:</p>
+
+<ol>
+<li>128 MB¹ partition named &quot;EFI&quot; with type &quot;EFI partition&quot; (hex code <code>ef00</code>).</li>
+<li>256 MB partition named &quot;boot&quot; with default type (just press enter when it asks for type).</li>
+<li>The rest (press enter to fill out the rest) forming a partition named &quot;fs&quot;
+with default type (again, just press enter).</li>
+</ol>
+
+<p>The utility will probably ask for where to start and end. Just press enter and
+let it fill out the values.</p>
+
+<p>Don't be freaked out if the highest row contains some small space, that you
+can't use. This space is usually reserved, and we won't touch it.</p>
+
+<p>Now click &quot;Write&quot; to write the new partition table to the disk.</p>
+
+<p>¹Note that the utility takes units, so you don't need to calculate the number
+ of sectors yourself.</p>
+
+<h1 id="setting-up-the-file-system">Setting up the file system</h1>
+
+<p>Now, we want to initialize the file system of the two first partitions
+(important: do not touch the last partition yet!):</p>
+
+<pre><code>mkfs.vfat -F32 /dev/sda1
+mkfs.ext2 /dev/sda2
+</code></pre>
+
+<p>Don't change the FS types. These are for the bootloader and thus only support a
+limited collections of file systems.</p>
+
+<p>Next, we want to set up our main partition (<code>/dev/sda3</code>), which is going to be
+encrypted at block-level:</p>
+
+<pre><code>cryptsetup -c aes-xts-plain64 -y --use-random luksFormat /dev/sda3
+</code></pre>
+
+<p>This will prompt you for a password, which you will have to remember. Use a
+strong password.</p>
+
+<p>Next, we want to mount this partition:</p>
+
+<pre><code>cryptsetup luksOpen /dev/sda3 luks
+</code></pre>
+
+<p>Now that we have this going, we are going to set up some logical/virtual
+volumes within this physical partition:</p>
+
+<pre><code>pvcreate /dev/mapper/luks
+vgcreate vg0 /dev/mapper/luks
+# This is the swap partition, change the size (8G) if necessary.
+lvcreate --size 8G vg0 --name swap
+# This is the rest of the disk, which will be used to store the root of the filesystem.
+lvcreate -l +100%FREE vg0 --name root
+</code></pre>
+
+<p>We will now set up the swap logical volume:</p>
+
+<pre><code>mkswap /dev/mapper/vg0-swap
+</code></pre>
+
+<p>Now we can create the filesystem. I choose btrfs because it's the best the
+Linux kernel has IMO:</p>
+
+<pre><code>mkfs.btrfs /dev/mapper/vg0-root
+</code></pre>
+
+<h1 id="bootstrapping-the-system">Bootstrapping the system</h1>
+
+<p>Now, first we want to mount it to <code>/mnt</code>, which we can do like this:</p>
+
+<pre><code>mount /dev/mapper/vg0-root /mnt
+mkdir /mnt/boot
+mount /dev/sda2 /mnt/boot
+mkdir /mnt/boot/efi
+mount /dev/sda1 /mnt/boot/efi
+</code></pre>
+
+<p>Next, we will install ArchLinux on the disk!</p>
+
+<pre><code>pacstrap /mnt base base-devel efibootmgr grub-efi-x86_64
+</code></pre>
+
+<p>The disk should have Arch now, but it can't boot yet. First, let's chroot into it:</p>
+
+<pre><code>arch-chroot /mnt
+</code></pre>
+
+<h1 id="basic-setup">Basic setup</h1>
+
+<p>Set the locale:</p>
+
+<pre><code>echo LANGUAGE=en_US &gt;&gt; /etc/locale.conf
+echo LANG=en_US.UTF-8 &gt;&gt; /etc/locale.conf
+echo LC_ALL=C &gt;&gt; /etc/locale.conf
+</code></pre>
+
+<p>Set the hw clock:</p>
+
+<pre><code>rm /etc/localtime
+ln -s /usr/share/zoneinfo/America/Chicago /etc/localtime
+hwclock --systohc --utc
+</code></pre>
+
+<p>Set the root password:</p>
+
+<pre><code>passwd
+</code></pre>
+
+<h2 id="creating-your-user">Creating your user</h2>
+
+<p>Next, you probably want to create a user:</p>
+
+<pre><code>useradd -m -g users -G wheel YOUR_USERNAME_HERE
+</code></pre>
+
+<p>The <code>-G wheel</code> ensures that you can do <code>sudo</code>.</p>
+
+<p>Next, set the password for this user:</p>
+
+<pre><code>passwd YOUR_USERNAME_HERE
+</code></pre>
+
+<h1 id="configuring-the-kernel">Configuring the kernel</h1>
+
+<p>Open up <code>/etc/mkinitcpio.conf</code> in your editor of choice.</p>
+
+<h2 id="encryption">Encryption</h2>
+
+<p>Add <code>encrypt</code> and <code>lvm2</code> to the <code>HOOKS</code> line, but BEFORE <code>filesystems</code>, so it looks something like this:</p>
+
+<pre><code>HOOKS=&quot;base udev autodetect modconf block encrypt lvm2 filesystems keyboard fsck&quot;
+</code></pre>
+
+<h2 id="enable-nouveau-and-btrfs">Enable nouveau and btrfs</h2>
+
+<p><code>nouveau</code> is the open-source NVIDIA driver, which I found to work better than
+the proprietary. <code>btrfs</code> is needed because of our file system.</p>
+
+<p>Add <code>nouveau</code> and <code>btrfs</code> to <code>MODULES</code> so the line reads:</p>
+
+<pre><code>MODULES=&quot;btrfs nouveau&quot;
+</code></pre>
+
+<h2 id="generate-the-initial-ramdisk-image">Generate the initial ramdisk image</h2>
+
+<p>Simply run:</p>
+
+<pre><code>mkinitcpio -p linux
+</code></pre>
+
+<h1 id="setting-up-a-bootloader">Setting up a bootloader</h1>
+
+<p>We'll choose GRUB as our bootloader.</p>
+
+<p>First, install it:</p>
+
+<pre><code>grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=&quot;Red Hat Enterprise Linux&quot; --recheck --debug
+</code></pre>
+
+<p>Note that the &quot;Red Hat Enterprise Linux&quot; is necessary on the hardware, we use, due to some weird whitelist of bootloader IDs.</p>
+
+<h2 id="configuring-grub">Configuring GRUB</h2>
+
+<p>This step is important. Without this, you won't be able to boot.</p>
+
+<p>Since there are issues with ACPI IRQs on our computer, we will disable those.
+Add <code>acpi=noirq</code> to <code>/etc/default/grub</code> in <code>GRUB_CMDLINE_LINUX_DEFAULT</code>, so
+that the line looks something like</p>
+
+<pre><code>GRUB_CMDLINE_LINUX_DEFAULT=&quot;acpi=noirq quiet splash&quot;
+</code></pre>
+
+<p>Next, we want to tell the initial Linux kernel that our disk is encrypted. We
+can do so by adding <code>cryptdevice=/dev/sda3:luks:allow-discards</code> in the
+<code>GRUB_CMDLINE_LINUX</code> variable, so it looks something like this:</p>
+
+<pre><code>GRUB_CMDLINE_LINUX=&quot;cryptdevice=/dev/sda3:luks:allow-discards&quot;
+</code></pre>
+
+<p>Finally, we can generate the config:</p>
+
+<pre><code>grub-mkconfig -o /boot/grub/grub.cfg
+</code></pre>
+
+<h1 id="reboot">Reboot</h1>
+
+<p>You need to be careful not to destroy anything here, as the initial unmounting
+can contain all sorts of weird operations setting up stuff etc., so do:</p>
+
+<pre><code>exit
+cd
+umount -R /mnt
+swapoff -a
+reboot
+</code></pre>
+
+<p>You should now boot up to an ArchLinux system.</p>
+
+<h1 id="internet">Internet</h1>
+
+<p>Again, unless you have Ethernet, use <code>wifi-menu</code> initially.</p>
+
+<h1 id="disableing-the-beep-sound">Disableing the beep sound</h1>
+
+<p>First, disable to module</p>
+
+<pre><code>rmmod pcspkr
+</code></pre>
+
+<p>Then blacklist the module, so you won't have to repeat on reboot:</p>
+
+<pre><code>echo &quot;blacklist pcspkr&quot; &gt; /etc/modprobe.d/nobeep.conf
+</code></pre>
+
+<h1 id="getting-audio">Getting audio</h1>
+
+<p>I tried a bunch of things, but found that installing <code>pulseaudio</code> and co. worked the best:</p>
+
+<pre><code>pacman -S pulseaudio pulseaudio-jack pulseaudio-alsa
+</code></pre>
+
+<p>Audio should now work.</p>
+
+<h1 id="power-management-and-cpu-frequency-scaling">Power management and CPU frequency scaling</h1>
+
+<p>TLP is a deamon that manages battery and power for you. It's pretty simple and
+works very well:</p>
+
+<pre><code>pacman -S tlp
+</code></pre>
+
+<p>To avoid having the machine getting too hot, we install <code>thermald</code>, which will
+control the fans based on the CPU usage:</p>
+
+<pre><code>pacman -S thermald
+systemctl start thermald
+</code></pre>
+
+<h1 id="setting-up-xorg">Setting up Xorg</h1>
+
+<p>Next, we want to set up Xorg, which can be done by simply:</p>
+
+<pre><code>pacman -S xorg-server xorg-apps xorg-xinit
+</code></pre>
+
+<p>Next, install the window manager or desktop environment of your choice. I
+personally like i3, but pick what you want.</p>
+
+<p>I recommend installing a display manager, like <code>slim</code>:</p>
+
+<pre><code>pacman -S slim
+</code></pre>
+
+<h2 id="xinitrc"><code>.xinitrc</code></h2>
+
+<p>In order to get QT to use GTK's style, add this to your <code>.xinitrc</code>:</p>
+
+<pre><code>export QT_STYLE_OVERRIDE=GTK+
+</code></pre>
+
+<p>(before <code>xrdb -merge</code>)</p>
+
+<h1 id="touchpad">Touchpad</h1>
+
+<p>Just install <code>xf86-input-synaptics</code>:</p>
+
+<pre><code>pacman -S xf86-input-synaptics
+</code></pre>
+
+<p>It can be a little bothersome, because the touchpad is super sensitive and will sometimes click when writing. Therefore, go to <code>/etc/X11/xorg.conf.d/70-synaptics.conf</code> and set:</p>
+
+<pre><code>Option &quot;FingerLow&quot; &quot;50&quot;
+Option &quot;FingerHigh&quot; &quot;70&quot;
+</code></pre>
+
+<p>If you dislike this driver, try <code>xorg-libinput</code> instead.</p>
+
+<h1 id="basic-desktop-necessities">Basic desktop necessities</h1>
+
+<p>We need a tray icon for battery, network, and volume. We also want to be able
+to control the volume through the respective keys. For this, install these
+utilities:</p>
+
+<pre><code>pacman -S volumeicon networkmanager network-manager-applet cbatticon
+</code></pre>
+
+<p>Make these run when you start your desktop environment or window manager.</p>
+
+<h1 id="fixing-the-font-size">Fixing the font size</h1>
+
+<p>For unknown reasons, the fonts seem to be screwed up, but adjusting the DPI
+doesn't work. If you find a good solution, please leave a comment, but until
+then, I found a working, but ugly solution (visually it looks just like).</p>
+
+<p>First, go to <code>.Xresources</code> and set:</p>
+
+<pre><code>Xft.dpi: 96
+</code></pre>
+
+<p>Then adjust the cursor size to something like this:</p>
+
+<pre><code>Xcursor.size: 20
+</code></pre>
+
+<p>Next, open <code>~/.gtkrc-2.0</code> and <code>~/.config/gtk-3.0/settings.ini</code>, and set the font like this:</p>
+
+<pre><code>gtk-font-name=&quot;DejaVu Sans 13&quot;
+</code></pre>
+
+<p>(if you haven't already, install <code>ttf-dejavu</code>)</p>
+
+<p>Although most GTK applications should work fine now, Firefox is still kinda
+messy with super small UI. I found that going to <code>about:config</code> and setting
+<code>layout.css.devPixelsPerPx</code> to <code>1.5</code> fixed this.</p>
+
+<p>If you use Thunderbird, repeat the instructions for Firefox. You can find
+<code>about:config</code> under <code>Preferences -&gt; Advanced -&gt; Config Editor</code>.</p>
+
+<p>If you think the font in websites looks small in Firefox, go to <code>Preferences -&gt;
+Content</code> and adjust the size to what you like.</p>
+
+<h1 id="firewall">Firewall</h1>
+
+<p>For security, you might want to install a firewall. I recommend <code>ufw</code>, which is
+simple and nice. Simply do:</p>
+
+<pre><code>pacman -S ufw
+ufw enable
+</code></pre>
+
+<p>And it should work. Refer to the UFW docs to information on adding rules etc.
+if necessary.</p>
+
+<h1 id="autosnapshotting">Auto-snapshotting</h1>
+
+<p>Set up <code>snapper</code> like this:</p>
+
+<pre><code>pacman -S snapper
+snapper -c root create-config /
+</code></pre>
+
+<p>Then set up the systemd timer to take snapshots hourly (not necessary if you have a cron deamon):</p>
+
+<pre><code>sudo systemctl start snapper-timeline.timer
+</code></pre>
+
+<h1 id="cleaning-up">Cleaning up</h1>
+
+<p>You can uninstall <code>efibootmgr</code> and <code>wifi-menu</code> if you want to.</p>
+
+<h1 id="finally">Finally</h1>
+
+<p>Reboot!</p>
+
+<pre><code>reboot
+</code></pre>
+
+<p>and hopefully you computer won't explode.</p>
+
+<h1 id="troubleshooting">Troubleshooting</h1>
+
+<p>I ran into one problem, which took me a while to fix. When I booted, it kept
+saying something like <code>a start job started by dev-disk-by...</code>. I ended up
+fixing it by booting to the USB stick and doing:</p>
+
+<pre><code># Mount the disk
+cryptsetup luksOpen /dev/sda3 luks
+mount /dev/mapper/vg0-root /mnt
+mkdir /mnt/boot
+mount /dev/sda2 /mnt/boot
+mkdir /mnt/boot/efi
+mount /dev/sda1 /mnt/boot/efi
+# Install necessary utilities
+pacman -S efibootmgr
+# Reconstruct initrd
+pacman -S linux
+mkinitcpio -p linux
+# Reinstall GRUB
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=&quot;Red Hat Enterprise Linux&quot; --recheck --debug
+grub-mkconfig -o /boot/grub/grub.cfg
+# Remake the swap
+mkswap /dev/mapper/vg0-swap
+# Cleanup
+pacman -Rncs efibootmgr
+</code></pre>
+
+<p>If you get problems with booting, run the above lines in <code>bash</code> and try to
+reboot.</p>
+
+<h1 id="things-i-havent-figured-out">Things I haven't figured out</h1>
+
+<ul>
+<li>Touchscreen. No idea on how to get it working, but I haven't tried much
+either, since I don't really use it.</li>
+</ul>
+
+<h1 id="credits">Credits</h1>
+
+<p>The authors of the ArchLinux wiki deserves a huge &quot;thank you&quot;. That wiki is an
+absolutely amazing resource, for not only ArchLinux but Linux in general.</p>
+
+</div>
+
+
+    </main>
+
+    
+      
+    
+  </body>
+</html>

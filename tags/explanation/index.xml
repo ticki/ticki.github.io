@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Explanation on </title>
+    <link>/tags/explanation/</link>
+    <description>Recent content in Explanation on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 25 Oct 2016 23:25:15 +0200</lastBuildDate>
+    
+	<atom:link href="/tags/explanation/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>How LZ4 works</title>
+      <link>/blog/how-lz4-works/</link>
+      <pubDate>Tue, 25 Oct 2016 23:25:15 +0200</pubDate>
+      
+      <guid>/blog/how-lz4-works/</guid>
+      <description>LZ4 is a really fast compression algorithm with a reasonable compression ratio, but unfortunately there is limited documentation on how it works. The only explanation (not spec, explanation) can be found on the author&#39;s blog, but I think it is less of an explanation and more of an informal specification.
+This blog post tries to explain it such that anybody (even new beginners) can understand and implement it.
+Linear small-integer code (LSIC) The first part of LZ4 we need to explain is a smart but simple integer encoder.</description>
+    </item>
+    
+  </channel>
+</rss>

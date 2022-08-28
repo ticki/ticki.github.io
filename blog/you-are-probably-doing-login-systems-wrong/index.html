@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.53" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>You Are (Probably) Doing Login Systems Wrong &middot; </title>
+  <meta name="description" content="This blog post details various ideas to create a secure login system." />
+
+  
+  <link type="text/css" rel="stylesheet" href="/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  
+</head>
+
+  <body class=" ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="/"><h1></h1></a>
+      <p class="lead">
+       Warning: This is the blog I wrote as a kid. Most of what is written here is probably wrong. 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="/">Home</a> </li>
+        <li><a href="/about/"> About </a></li><li><a href="https://github.com/ticki"> GitHub </a></li>
+      </ul>
+    </nav>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>You Are (Probably) Doing Login Systems Wrong</h1>
+  <time datetime=2017-05-12T00:00:00Z class="post-date">Fri, May 12, 2017</time>
+  <p>A thing, most programmers have tried at least once, is login systems. Despite
+being seemingly a simple task, it is in fact very hard to do right.</p>
+
+<p>So, let's look into, how we can actually do this right.</p>
+
+<h1 id="storing-passwords">Storing passwords</h1>
+
+<p>Okay, this is common knowledge: Salt and hash your passwords.</p>
+
+<p>However, it is often done wrong. You'll see code like:</p>
+
+<pre><code>hash(password + salt)
+</code></pre>
+
+<p>This is better than unsalted, unhashed passwords, but it's far from bruteforce
+resistant. Why? Because hashing is cheap. With proper machines, you can do
+billions of them in a second. A dictionary attack is piece of cake.</p>
+
+<p>So how do we solve this? Well, we use a KDF. A KDF (key derivation function)
+acts like a slow hash function. A hash function, where calculating takes maybe
+100 ms. or more.</p>
+
+<p>In general, two kinds of KDFs exists, the CPU-based and the CPU-memory hybrids.
+The CPU based are still in use, but I don't recommend using them, as they can
+easily be calculated with ASICs. The CPU-memory hybrids requires some amount of
+memory for calculating the hash value, often making it substantially harder to
+create ASICs.</p>
+
+<p>For the reasons stated above, I recommend <code>scrypt</code>, for a modern, well-known
+an secure KDF.</p>
+
+<h1 id="sessions">Sessions</h1>
+
+<p>In general, sessions should be assigned a token by the server. This token is
+shared with the client (e.g. through a cookie) as the way to prove, that they
+are logged in with a given account to the server.</p>
+
+<p>There is a few things to keep in mind, though.</p>
+
+<p>The session token shall have an expiration date, for security reasons.
+Furthermore, the session token shall be deactivated when the user logs out.</p>
+
+<p>One mistake often made in storing the session tokens is to store them in
+memory. This is wrong, as it means that crashes or restarts logs every user
+out, suspending all sessions. Instead, it ought to be stored in a database,
+possibly in a column of the users table.</p>
+
+<p>Lastly, the session must not be shared through GET or other logged means.
+Rather, it should be stored in a cookie or <code>localStorage</code>.</p>
+
+<h1 id="clientside-hashing">Client-side hashing</h1>
+
+<p>A pretty uncommon, but really good practice, is the client-side hashing. It is
+supposed act as another layer of security, hiding the password from the server.</p>
+
+<p>The idea is that the client-side should hash (e.g. <code>scrypt</code>) the password
+before sending it to the server.</p>
+
+<p>This can seem pretty pointless, as (in the case of the web) the server could
+simply change the JavaScript to leak the password, but there is a reason: If
+the server-side has a bug that allows to read certain chosen memory locations
+(a buffer overflow, for example), it could be exploited to read the plaintext
+password.</p>
+
+<p>Instead, with client-side hashing, it can only read the hashed value. This of
+course doesn't stop the hacker from logging in to the user's account, but it
+stops them from obtaining the potentially reused plain-text password.</p>
+
+<h1 id="rate-limiting">Rate limiting</h1>
+
+<p>Rate limiting is really, really important, even though it is often understated.
+It prevents someone from bruteforcing common passwords.</p>
+
+<p>But how should the rate limiting work?</p>
+
+<p>One neat way is the &quot;leaky bucket algorithm&quot;. It works by having requests
+&quot;dripping&quot; into a bucket like drops of water. When the leaky bucket is filled,
+no more requessts can be made, until the bucket has leaked to empty.</p>
+
+<p>In less figurative language, you have a counter on every visitor IP address,
+which is incremented on every request (e.g. login, create account etc.). When
+this counter is above some level (say 5), a timeout is set (e.g. the time when
+it expire is set as a field of the user). First when this timeout expires, the
+counter resets, and new requests can be made.</p>
+
+<h1 id="resetting-accounts">Resetting accounts</h1>
+
+<p>Of course a proper system must have the ability to reset accounts. There are
+many ways of doing this.</p>
+
+<p>I would recommend to have the user provide username and E-mail, as it—contrary
+to other approaches—does not allow spamming or denial of service attacks. It is
+important that you do not reveal whether or not the E-mail matched, as that can
+be a breach of privacy of the user (such thing can be used to check if the
+E-mail address matched).</p>
+
+<p>If the E-mail is only going to be used for resetting, I strongly recommend that
+you store a fingerprint (e.g. scrypt) of the E-mail address rather than the
+plaintext version. This still ensures that you can check if the given E-mail
+address of the resetting user matches, without the server side knowing anything
+about the address. It prevents the database being misused or sold for spam
+purposes, and also helps to protect the user's identity.</p>
+
+<p>When the user resets, a token shall be generated. This token is used in a link,
+sent to the user through an E-mail. It is important that this token is
+sufficiently long, random, and furthermore, that it expires (ideally within only
+a few hours).</p>
+
+<p>Note that upon resetting, the token should removed from the map.</p>
+
+<h1 id="other-tips">Other tips</h1>
+
+<ul>
+<li>Consider implementing a common two-factor key-sharing algorithm, such as
+<a href="https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm">TOTP</a>.</li>
+<li>I recommend that changing E-mail and password are done under the &quot;reset
+password&quot; formula, such that E-mail confirmation is required.</li>
+<li>It is extremely important that the connection, where the login happens is
+secure, for example <code>https</code>.</li>
+</ul>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>Well, that's it.</p>
+
+<p>You have to be careful about what you do, though. This is a minefield of
+vulnerabilities, and you have to be very careful not to introduce subtle bugs
+in your code. I recommend that you let somebody other than yourself review your
+code, to give you another's perspective on the code.</p>
+
+</div>
+
+
+    </main>
+
+    
+      
+    
+  </body>
+</html>

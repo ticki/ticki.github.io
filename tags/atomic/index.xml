@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Atomic on </title>
+    <link>/tags/atomic/</link>
+    <description>Recent content in Atomic on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 13 May 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/atomic/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>An Atomic Hash Table</title>
+      <link>/blog/an-atomic-hash-table/</link>
+      <pubDate>Sat, 13 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/an-atomic-hash-table/</guid>
+      <description>In programs where there is some kind of global state, you will often find the need for having a key-value map; you could for example imagine keeping some kind of cache of a bunch of entries from database table. Obviously, you&#39;d just use a hash table, easy right?
+Not really. Imagine that there is multiple threads. One approach is to wrap it in a mutex to ensure thread safety, but that would kind of miss the point of concurrency: It wouldn&#39;t be concurrent, it would just be blocking.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.53" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Designing a good non-cryptographic hash function &middot; </title>
+  <meta name="description" content="These are my thoughts on designing fast, high-quality non-cryptographic hash functions." />
+
+  
+  <link type="text/css" rel="stylesheet" href="/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  
+</head>
+
+  <body class=" ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="/"><h1></h1></a>
+      <p class="lead">
+       Warning: This is the blog I wrote as a kid. Most of what is written here is probably wrong. 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="/">Home</a> </li>
+        <li><a href="/about/"> About </a></li><li><a href="https://github.com/ticki"> GitHub </a></li>
+      </ul>
+    </nav>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>Designing a good non-cryptographic hash function</h1>
+  <time datetime=2016-11-04T16:28:44&#43;0200 class="post-date">Fri, Nov 4, 2016</time>
+  <script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<p>So, I've been needing a hash function for various purposes, lately. None of the existing hash functions I could find were sufficient for my needs, so I went and designed my own. These are my notes on the design of hash functions.</p>
+
+<h1 id="what-is-a-hash-function-really">What is a hash function <em>really</em>?</h1>
+
+<p>Hash functions are functions which maps a infinite domain to a finite codomain. Two elements in the domain, <span  class="math">\(a, b\)</span> are said to collide if <span  class="math">\(h(a) = h(b)\)</span>.</p>
+
+<p>The ideal hash functions has the property that the distribution of image of a a subset of the domain is statistically independent of the probability of said subset occuring. That is, collisions are not likely to occur even within non-uniform distributed sets.</p>
+
+<p>Consider you have an english dictionary. Clearly, <code>hello</code> is more likely to be a word than <code>ctyhbnkmaasrt</code>, but the hash function must not be affected by this statistical redundancy.</p>
+
+<p>In a sense, you can think of the ideal hash function as being a function where the output is uniformly distributed (e.g., chosen by a sequence of coinflips) over the codomain no matter what the distribution of the input is.</p>
+
+<p>With a good hash function, it should be hard to distinguish between a truely random sequence and the hashes of some permutation of the domain.</p>
+
+<p>Hash function ought to be as chaotic as possible. A small change in the input should appear in the output as if it was a big change. This is called the hash function butterfly effect.</p>
+
+<h2 id="noncryptographic-and-cryptographic">Non-cryptographic and cryptographic</h2>
+
+<p>One must make the distinction between cryptographic and non-cryptographic hash functions. In a cryptographic hash function, it must be infeasible to:</p>
+
+<ol>
+<li>Generate the input from its hash output.</li>
+<li>Generate two inputs with the same output.</li>
+</ol>
+
+<p>Non-cryptographic hash functions can be thought of as approximations of these invariants. The reason for the use of non-cryptographic hash function is that they're significantly faster than cryptographic hash functions.</p>
+
+<h1 id="diffusions-and-bijection">Diffusions and bijection</h1>
+
+<p>The basic building block of good hash functions are difussions. Difussions can be thought of as bijective (i.e. every input has one and only one output, and vice versa) hash functions, namely that input and output are uncorrelated:</p>
+
+<p><figure><img src="/img/bijective_diffusion_diagram.svg" alt="A diagram of a diffusion."></figure></p>
+
+<p>This diffusion function has a relatively small domain, for illustrational purpose.</p>
+
+<h2 id="building-a-good-diffusion">Building a good diffusion</h2>
+
+<p>Diffusions are often build by smaller, bijective components, which we will call &quot;subdiffusions&quot;.</p>
+
+<h3 id="types-of-subdiffusions">Types of subdiffusions</h3>
+
+<p>One must distinguish between the different kinds of subdiffusions.</p>
+
+<p>The first class to consider is the <strong>bitwise subdiffusions</strong>. These are quite weak when they stand alone, and thus must be combined with other types of subdiffusions. Bitwise subdiffusions might flip certain bits and/or reorganize them:</p>
+
+<p><span  class="math">\[d(x) = \sigma(x) \oplus m\]</span></p>
+
+<p>(we use <span  class="math">\(\sigma\)</span> to denote permutation of bits)</p>
+
+<p>The second class is <strong>dependent bitwise subdiffusions</strong>. These are diffusions which permutes the bits and XOR them with the original value:</p>
+
+<p><span  class="math">\[d(x) = \sigma(x) \oplus x\]</span></p>
+
+<p>(exercise to reader: prove that the above subdivision is revertible)</p>
+
+<p>Another similar often used subdiffusion in the same class is the XOR-shift:</p>
+
+<p><span  class="math">\[d(x) = (x \ll m) \oplus x\]</span></p>
+
+<p>(note that <span  class="math">\(m\)</span> can be negative, in which case the bitshift becomes a right bitshift)</p>
+
+<p>The next subdiffusion are of massive importance. It's the class of <strong>linear subdiffusions</strong> similar to the LCG random number generator:</p>
+
+<p><span  class="math">\[d(x) \equiv ax + c \pmod m, \quad \gcd(x, m) = 1\]</span></p>
+
+<p>(<span  class="math">\(\gcd\)</span> means &quot;greatest common divisor&quot;, this constraint is necessary in order to have <span  class="math">\(a\)</span> have an inverse in the ring)</p>
+
+<p>The next are particularly interesting, it's the <strong>arithmetic subdiffusions</strong>:</p>
+
+<p><span  class="math">\[d(x) = x \oplus (x + c)\]</span></p>
+
+<h3 id="combining-subdiffusions">Combining subdiffusions</h3>
+
+<p>Subdiffusions themself are quite poor quality. Combining them is what creates a good diffusion function.</p>
+
+<p>Indeed if you combining enough different subdiffusions, you get a good diffusion function, but there is a catch: The more subdiffusions you combine the slower it is to compute.</p>
+
+<p>As such, it is important to find a small, diverse set of subdiffusions which has a good quality.</p>
+
+<h3 id="zerosensitivity">Zero-sensitivity</h3>
+
+<p>If your diffusion isn't zero-sensitive (i.e., <span  class="math">\(f(0) = \{0, 1\}\)</span>), you should <del>panic</del> come up with something better. In particular, make sure your diffusion contains at least one zero-sensitive subdiffusion as component.</p>
+
+<h3 id="avalanche-diagrams">Avalanche diagrams</h3>
+
+<p>Avalanche diagrams are the best and quickist way to find out if your diffusion function has a good quality.</p>
+
+<p>Essentially, you draw a grid such that the <span  class="math">\((x, y)\)</span> cell's color represents the probability that flipping <span  class="math">\(x\)</span>'th bit of the input will result of <span  class="math">\(y\)</span>'th bit being flipped in the output. If <span  class="math">\((x, y)\)</span> is very red, the probability that <span  class="math">\(d(a')\)</span>, where <span  class="math">\(a'\)</span> is <span  class="math">\(a\)</span> with the <span  class="math">\(x\)</span>'th bit flipped,' has the <span  class="math">\(y\)</span>'th bit flipped is very high.</p>
+
+<p>Here's an example of the identity function, <span  class="math">\(f(x) = x\)</span>:</p>
+
+<p><figure><img src="/img/identity_function_avalanche_diagram.svg" alt="The identity function."></figure></p>
+
+<p>So why is it a straight line?</p>
+
+<p>Well, if you flip the <span  class="math">\(n\)</span>'th bit in the input, the only bit flipped in the output is the <span  class="math">\(n\)</span>'th bit. That's kind of boring, let's try adding a number:</p>
+
+<p><figure><img src="/img/addition_avalanche_diagram.svg" alt="Adding a big number."></figure></p>
+
+<p>Meh, this is kind of obvious. Let's try multiplying by a prime:</p>
+
+<p><figure><img src="/img/prime_multiplication_avalanche_diagram.svg" alt="Multiplying by a non-even prime is a bijection."></figure></p>
+
+<p>Now, this is quite interesting actually. We call all the black area &quot;blind spots&quot;, and you can see here that anything with <span  class="math">\(x > y\)</span> is a blind spot. Why is that? Well, if I flip a high bit, it won't affect the lower bits because you can see multiplication as a form of overlay:</p>
+
+<pre><code>100011101000101010101010111
+      :
+    111
+↕↕↕↕↕↕↕↕↕↕↕↕↕↕↕↕↕↕↕↕↕↕↕↕↕↕↕
+100000001000101010101010111
+      :
+    111
+</code></pre>
+
+<p>Flipping a single bit will only change the integer forward, never backwards, hence it forms this blind spot. So how can we fix this (we don't want this bias)?</p>
+
+<h4 id="designing-a-diffusion-function--by-example">Designing a diffusion function -- by example</h4>
+
+<p>If we throw in (after prime multiplication) a dependent bitwise-shift subdiffusions, we have</p>
+
+<p><span  class="math">\[\begin{align*}
+x &\gets x + 1 \\
+x &\gets x \oplus (x \gg z) \\
+x &\gets px \\
+x &\gets x \oplus (x \ll z) \\
+\end{align*}\]</span></p>
+
+<p>(note that we have the <span  class="math">\(+1\)</span> in order to make it zero-sensitive)</p>
+
+<p>This generates following avalanche diagram</p>
+
+<p><figure><img src="/img/shift_xor_multiply_avalanche_diagram.svg" alt="Shift-XOR then multiply."></figure></p>
+
+<p>What can cause these? Clearly there is some form of bias. Turns out that this bias mostly originates in the lack of hybrid arithmetic/bitwise sub.
+Without such hybrid, the behavior tends to be relatively local and not interfering well with each other.</p>
+
+<p><span  class="math">\[x \gets x + \text{ROL}_k(x)\]</span></p>
+
+<p>At this point, it looks something like</p>
+
+<p><figure><img src="/img/shift_xor_multiply_rotate_avalanche_diagram.svg" alt="Shift-XOR then multiply."></figure></p>
+
+<p>That's good, but we're not quite there yet...</p>
+
+<p>Let's throw in the following bijection:</p>
+
+<p><span  class="math">\[x \gets px \oplus (px \gg z)\]</span></p>
+
+<p>And voilà, we now have a perfect bit independence:</p>
+
+<p><figure><img src="/img/perfect_avalanche_diagram.svg" alt="Everything is red!"></figure></p>
+
+<p>So our finalized version of an example diffusion is</p>
+
+<p><span  class="math">\[\begin{align*}
+x &\gets x + 1 \\
+x &\gets x \oplus (x \gg z) \\
+x &\gets px \\
+x &\gets x \oplus (x \ll z) \\
+x &\gets x + \text{ROL}_k(x) \\
+x &\gets px \\
+x &\gets x \oplus (x \gg z) \\
+\end{align*}\]</span></p>
+
+<p>That seems like a pretty lengthy chunk of operations. We will try to boil it down to few operations while preserving the quality of this diffusion.</p>
+
+<p>The most obvious think to remove is the rotation line. But it hurts quality:</p>
+
+<p><figure><img src="/img/multiply_up_avalanche_diagram.svg" alt="Here's the avalanche diagram of said line removed."></figure></p>
+
+<p>Where do these blind spot comes from? The answer is pretty simple: shifting left moves the entropy upwards, hence the multiplication will never really flip the lower bits. For example, if we flip the sixth bit, and trace it down the operations, you will how it never flips in the other end.</p>
+
+<p>So what do we do? Instead of shifting left, we need to shift right, since multiplication only affects upwards:</p>
+
+<p><span  class="math">\[\begin{align*}
+x &\gets x + 1 \\
+x &\gets x \oplus (x \gg z) \\
+x &\gets px \\
+x &\gets x \oplus (x \gg z) \\
+x &\gets px \\
+x &\gets x \oplus (x \gg z) \\
+\end{align*}\]</span></p>
+
+<p>And we're back again. This time with two less instructions.</p>
+
+<table>
+<thead>
+<tr>
+<th><figure><img src="/img/cakehash_stage_1_avalanche_diagram.svg" alt="Stage 1"></figure></th>
+<th><figure><img src="/img/cakehash_stage_2_avalanche_diagram.svg" alt="Stage 2"></figure></th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><p><figure><img src="/img/cakehash_stage_3_avalanche_diagram.svg" alt="Stage 3"></figure></p>
+</td>
+<td><p><figure><img src="/img/cakehash_stage_4_avalanche_diagram.svg" alt="Stage 4"></figure></p>
+</td>
+</tr>
+
+<tr>
+<td><p><figure><img src="/img/cakehash_stage_5_avalanche_diagram.svg" alt="Stage 5"></figure></p>
+</td>
+<td><p><figure><img src="/img/perfect_avalanche_diagram.svg" alt="Stage 6"></figure></p>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h1 id="combining-diffusions">Combining diffusions</h1>
+
+<p>Diffusions maps a finite state space to a finite state space, as such they're not alone sufficient as arbitrary-length hash function, so we need a way to combine diffusions.</p>
+
+<p>In particular, we can eat <span  class="math">\(N\)</span> bytes of the input at once and modify the state based on that:</p>
+
+<p><span  class="math">\[s' = d(f(s', x))\]</span></p>
+
+<p>Or in graphic form,</p>
+
+<p><figure><img src="/img/hash_round_flowchart.svg" alt="A flowchart."></figure></p>
+
+<p><span  class="math">\(f(s', x)\)</span> is what we call our combinator function. It serves for combining the old state and the new input block (<span  class="math">\(x\)</span>). <span  class="math">\(d(a)\)</span> is just our diffusion function.</p>
+
+<p>It doesn't matter if the combinator function is commutative or not, but it is crucial that it is not biased, i.e. if <span  class="math">\(a, b\)</span> are uniformly distributed variables, <span  class="math">\(f(a, b)\)</span> is too. Ideally, there should exist a bijection, <span  class="math">\(g(f(a, b), b) = a\)</span>, which implies that it is not biased.</p>
+
+<p>An example of such combination function is simple addition.</p>
+
+<p><span  class="math">\[f(a, b) = a + b\]</span></p>
+
+<p>Another is</p>
+
+<p><span  class="math">\[f(a, b) = a \oplus b\]</span></p>
+
+<p>I'm partial towards saying that these are the only sane choices for combinator functions, and you must pick between them based on the characteristics of your diffusion function:</p>
+
+<ol>
+<li>If your diffusion function is primarily based on arithmetics, you should use the XOR combinator function.</li>
+<li>If your diffusion function is primarily based on bitwise operations, you should use the additive combinator function.</li>
+</ol>
+
+<p>The reason for this is that you want to have the operations to be as diverse as possible, to create complex, seemingly random behavior.</p>
+
+<h1 id="simd-simd-simd">SIMD, SIMD, SIMD</h1>
+
+<p>If you want good performance, you shouldn't read only one byte at a time. By reading multiple bytes at a time, your algorithm becomes several times faster.</p>
+
+<p>This however introduces the need for some finalization, if the total number of written bytes doesn't divide the number of bytes read in a round. One possibility is to pad it with zeros and write the total length in the end, however this turns out to be somewhat slow for small inputs.</p>
+
+<p>A better option is to write in the number of padding bytes into the last byte.</p>
+
+<h1 id="instruction-level-parallelism">Instruction level parallelism</h1>
+
+<p>Fetching multiple blocks and sequentially (without dependency until last) running a round is something I've found to work well. This has to do with the so-called instruction pipeline in which modern processors run instructions in parallel when they can.</p>
+
+<h1 id="testing-the-hash-function">Testing the hash function</h1>
+
+<p>Multiple test suits for testing the quality and performance of your hash function. <a href="https://github.com/aappleby/smhasher">Smhasher</a> is one of these.</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>Many relatively simple components can be combined into a strong and robust non-cryptographic hash function for use in hash tables and in checksumming. Deriving such a function is really just coming up with the components to construct this hash function.</p>
+
+<p>Breaking the problem down into small subproblems significantly simplifies analysis and guarantees.</p>
+
+<p>The key to a good hash function is to try-and-miss. Testing and throwing out candidates is the only way you can really find out if you hash function works in practice.</p>
+
+<p>Have fun hacking!</p>
+
+</div>
+
+
+    </main>
+
+    
+      
+    
+  </body>
+</html>

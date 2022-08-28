@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.53" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Collision Resolution with Nested Hash Tables &middot; </title>
+  <meta name="description" content="I discuss a new way of doing collision resolution." />
+
+  
+  <link type="text/css" rel="stylesheet" href="/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  
+</head>
+
+  <body class=" ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="/"><h1></h1></a>
+      <p class="lead">
+       Warning: This is the blog I wrote as a kid. Most of what is written here is probably wrong. 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="/">Home</a> </li>
+        <li><a href="/about/"> About </a></li><li><a href="https://github.com/ticki"> GitHub </a></li>
+      </ul>
+    </nav>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>Collision Resolution with Nested Hash Tables</h1>
+  <time datetime=2017-02-16T00:00:00Z class="post-date">Thu, Feb 16, 2017</time>
+  <script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<h1 id="collision-resolution">Collision resolution</h1>
+
+<p>Hash collisions in hash tables are unevitable, and therefore every proper implementation needs a form of <em>collision resolution</em>. Collision resolution is the name of the class of algorithms and techniques used to organize and resolve the case where two entries in the table hash to the same bucket.</p>
+
+<p>It turns out that the choice and implementation of collision resolution is absolutely critical for the performance of the table, because while hash tables are often mistaken for having <span  class="math">\(O(1)\)</span> lookups, they do in reality and theory have a sligthly more complicated behavior.</p>
+
+<p>There are really two big competing families of algorithms of resolving collisions:</p>
+
+<ol start="2">
+<li>Open addressing: This keeps all entries in the bucket array, but applies some way of finding a new bucket if the ideal one is occupied. To keep the load factor low, they generally reallocate before they get full. This is an OK solution when doing things in-memory, but on-disk this absolutely sucks, since you potentially have millions of entries. If you plot the lookup time over the number of entries, it will look like an increasing line, which suddenly peaks and then falls, with the peaks getting more and more uncommon. This rather complex performance behavior can also make them unfit for certain purposes.</li>
+<li>Chaining: This uses some structure for storing multiple entries in a bucket. Often through B-trees or linked lists.</li>
+</ol>
+
+<p>In this post, we will look at chaining.</p>
+
+<h1 id="nested-tables">Nested tables</h1>
+
+<p>What if we used another hash table for multi-entry buckets?</p>
+
+<p>The idea is that we have some sequence of independent (this is a very important invariant) hash functions <span  class="math">\(\{h_n(x)\}\)</span>, and the root table uses hash function <span  class="math">\(h_0(k)\)</span> to assign a bucket to key <span  class="math">\(k\)</span>. If the entry is empty, the value is simply inserted there and the bucket's tag is set to &quot;single&quot;.</p>
+
+<p>If however the bucket already has at least one entry, it will be inserted into a hash table, placed in said bucket, and the bucket where the entry will be (in the new hash table) is determined by <span  class="math">\(h_1(k)\)</span>.</p>
+
+<p>This process (<span  class="math">\(h_0(k)\)</span>, <span  class="math">\(h_1(k)\)</span>, <span  class="math">\(h_2(k)\)</span>...) repeats until a free bucket is found.</p>
+
+<p>This seems like a pretty obvious thing, but when you think about it it has some interesting properties for block-based on-disk structures, as we will discuss later.</p>
+
+<h1 id="analysis">Analysis</h1>
+
+<p>The analysis is pretty simple: If the hash functions are sufficiently good and independent, the space usage has a (amortized) linear upper-bound.</p>
+
+<p>The lookup speed is perhaps more important than the space, and it is in many ways similar to B+ trees, except that this is simpler and perhaps faster. Both have logarithmic complexity of lookups, and more importantly, the base of the logarithm is usually pretty high (although it depends on the choice of default table size).</p>
+
+<h1 id="blockbased-ondisk-storage">Block-based on-disk storage</h1>
+
+<p>Because block-based storage is so convenient, it is used in many database systems and file systems. It is one of the reasons B+ trees is such a popular indexing method.</p>
+
+<p>In particular, if a single block can store N pointers, we can simply let one table have N buckets, meaning there is no waste of space.</p>
+
+<p>Compared to B+ trees, there is a pretty clear advantage in the case of dynamically sized keys, since comparing requires loading, which is generally a very expensive task. Hashing on the other hand is easy, and never requires any comparison (with the exception of the last table, perhaps¹).</p>
+
+<p>¹it is popular to use cryptographic fingerprints to avoid the inconvenience of arbitrary-sized keys.</p>
+
+</div>
+
+
+    </main>
+
+    
+      
+    
+  </body>
+</html>

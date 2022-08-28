@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Phonetics on </title>
+    <link>/tags/phonetics/</link>
+    <description>Recent content in Phonetics on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 11 Dec 2016 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/phonetics/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>The Eudex Algorithm</title>
+      <link>/blog/the-eudex-algorithm/</link>
+      <pubDate>Sun, 11 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/the-eudex-algorithm/</guid>
+      <description>Half a year ago, I designed Eudex as a modern replacement for Soundex, which is still widely used today. Eudex supports a wide range of special-cases of European languages, while preserving the spirit of simplicity, Soundex has.
+Both Eudex and Soundex are phonetic algorithms that produce a representation of the sound of some string. Eudex is fundamentally different from Soundex in that it is not a phonetic classifier. It is a phonetic locality-sensitive hash, which means that two similarly-sounding strings are not mapped to the same value, but instead to values near to each other.</description>
+    </item>
+    
+  </channel>
+</rss>

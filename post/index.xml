@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on </title>
+    <link>/post/</link>
+    <description>Recent content in Posts on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 02 Aug 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Fearless concurrency with hazard pointers</title>
+      <link>/blog/fearless-concurrency-with-hazard-pointers/</link>
+      <pubDate>Wed, 02 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/fearless-concurrency-with-hazard-pointers/</guid>
+      <description>For those who don&#39;t know, I am working on a file system, TFS, which employs various concurrent structures to improve performance. Whenever you do this kind of advanced concurrency, you will meet the ABA problem, roughly describable as &amp;quot;what if another thread runs the destructor on a value you are reading?&amp;quot;
+What this problem is, and how can it be solved, is what this blog post will investigate. It presents a form of an optimized form of hazard-pointers as well as an implementation thereof.</description>
+    </item>
+    
+    <item>
+      <title>Setting up ArchLinux on a Lenovo Yoga</title>
+      <link>/blog/setting-up-archlinux-on-a-lenovo-yoga/</link>
+      <pubDate>Tue, 30 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/setting-up-archlinux-on-a-lenovo-yoga/</guid>
+      <description>So, I recently broke my computer by spilling tea unto it, so I needed a new computer, and found the Lenovo Yoga 710, which is pretty lightweight and yet strong. As the resources on installing Linux (ArchLinux specifically) on this machine are barely existing, I thought I had to make this post, explaining various critical thing about the installation.
+Bear in mind that all this is made from notes and what I recall from when I installed it (yesterday), so there might be minor inaccuracies.</description>
+    </item>
+    
+    <item>
+      <title>An Atomic Hash Table</title>
+      <link>/blog/an-atomic-hash-table/</link>
+      <pubDate>Sat, 13 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/an-atomic-hash-table/</guid>
+      <description>In programs where there is some kind of global state, you will often find the need for having a key-value map; you could for example imagine keeping some kind of cache of a bunch of entries from database table. Obviously, you&#39;d just use a hash table, easy right?
+Not really. Imagine that there is multiple threads. One approach is to wrap it in a mutex to ensure thread safety, but that would kind of miss the point of concurrency: It wouldn&#39;t be concurrent, it would just be blocking.</description>
+    </item>
+    
+    <item>
+      <title>You Are (Probably) Doing Login Systems Wrong</title>
+      <link>/blog/you-are-probably-doing-login-systems-wrong/</link>
+      <pubDate>Fri, 12 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/you-are-probably-doing-login-systems-wrong/</guid>
+      <description>A thing, most programmers have tried at least once, is login systems. Despite being seemingly a simple task, it is in fact very hard to do right.
+So, let&#39;s look into, how we can actually do this right.
+Storing passwords Okay, this is common knowledge: Salt and hash your passwords.
+However, it is often done wrong. You&#39;ll see code like:
+hash(password + salt)  This is better than unsalted, unhashed passwords, but it&#39;s far from bruteforce resistant.</description>
+    </item>
+    
+    <item>
+      <title>A general construction for rolling hash functions</title>
+      <link>/blog/a-general-construction-for-rolling-hash-functions/</link>
+      <pubDate>Thu, 02 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/a-general-construction-for-rolling-hash-functions/</guid>
+      <description>What is a rolling hash function? A hash function is a function \(h : S^\times \to F\) with \(S, F\) being some finite sets.
+A rolling hash function is really a set of functions \((h, u)\), where \(u\) allows retroactively updated a symbol
+\[h(\ldots a \ldots) \mapsto h(\ldots a&#39; \ldots)\]
+To put it more formally, a rolling hash function has an associated function \(u : F \times S^2 \times \mathbb N \to F\), satisfying</description>
+    </item>
+    
+    <item>
+      <title>Collision Resolution with Nested Hash Tables</title>
+      <link>/blog/collision-resolution-with-nested-hash-tables/</link>
+      <pubDate>Thu, 16 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/collision-resolution-with-nested-hash-tables/</guid>
+      <description>Collision resolution Hash collisions in hash tables are unevitable, and therefore every proper implementation needs a form of collision resolution. Collision resolution is the name of the class of algorithms and techniques used to organize and resolve the case where two entries in the table hash to the same bucket.
+It turns out that the choice and implementation of collision resolution is absolutely critical for the performance of the table, because while hash tables are often mistaken for having \(O(1)\) lookups, they do in reality and theory have a sligthly more complicated behavior.</description>
+    </item>
+    
+    <item>
+      <title>Portfolio of Logos and Icons</title>
+      <link>/blog/portfolio-of-logos-and-icons/</link>
+      <pubDate>Mon, 19 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/portfolio-of-logos-and-icons/</guid>
+      <description>This is a collection of the logos and icons, I created (and used/not drafts) during the last years.
+Open-Sea Open Sea is a dead game project I was working on:
+          Simple pixel art. Stylistic and minimalistic text. Simple icon similar to the graphics in the game.  Redox Redox is an operating-system I work on. The icon was one of the first things I contributed to Redox (before code):</description>
+    </item>
+    
+    <item>
+      <title>The Eudex Algorithm</title>
+      <link>/blog/the-eudex-algorithm/</link>
+      <pubDate>Sun, 11 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/the-eudex-algorithm/</guid>
+      <description>Half a year ago, I designed Eudex as a modern replacement for Soundex, which is still widely used today. Eudex supports a wide range of special-cases of European languages, while preserving the spirit of simplicity, Soundex has.
+Both Eudex and Soundex are phonetic algorithms that produce a representation of the sound of some string. Eudex is fundamentally different from Soundex in that it is not a phonetic classifier. It is a phonetic locality-sensitive hash, which means that two similarly-sounding strings are not mapped to the same value, but instead to values near to each other.</description>
+    </item>
+    
+    <item>
+      <title>SeaHash: Explained</title>
+      <link>/blog/seahash-explained/</link>
+      <pubDate>Thu, 08 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/seahash-explained/</guid>
+      <description>So, not so long ago, I designed SeaHash, an alternative hash algorithm with performance better than most (all?) of the existing non-cryptographic hash functions available. I designed it for checksumming for a file system, I&#39;m working on, but I quickly found out it was sufficient for general hashing.
+It blew up. I got a lot of cool feedback, and yesterday it was picked as crate of the week. It shows that there is some interest in it, so I want to explain the ideas behind it.</description>
+    </item>
+    
+    <item>
+      <title>Designing a good non-cryptographic hash function</title>
+      <link>/blog/designing-a-good-non-cryptographic-hash-function/</link>
+      <pubDate>Fri, 04 Nov 2016 16:28:44 +0200</pubDate>
+      
+      <guid>/blog/designing-a-good-non-cryptographic-hash-function/</guid>
+      <description>So, I&#39;ve been needing a hash function for various purposes, lately. None of the existing hash functions I could find were sufficient for my needs, so I went and designed my own. These are my notes on the design of hash functions.
+What is a hash function really? Hash functions are functions which maps a infinite domain to a finite codomain. Two elements in the domain, \(a, b\) are said to collide if \(h(a) = h(b)\).</description>
+    </item>
+    
+    <item>
+      <title>How LZ4 works</title>
+      <link>/blog/how-lz4-works/</link>
+      <pubDate>Tue, 25 Oct 2016 23:25:15 +0200</pubDate>
+      
+      <guid>/blog/how-lz4-works/</guid>
+      <description>LZ4 is a really fast compression algorithm with a reasonable compression ratio, but unfortunately there is limited documentation on how it works. The only explanation (not spec, explanation) can be found on the author&#39;s blog, but I think it is less of an explanation and more of an informal specification.
+This blog post tries to explain it such that anybody (even new beginners) can understand and implement it.
+Linear small-integer code (LSIC) The first part of LZ4 we need to explain is a smart but simple integer encoder.</description>
+    </item>
+    
+    <item>
+      <title>Making Terminal Applications in Rust with Termion</title>
+      <link>/blog/making-terminal-applications-in-rust-with-termion/</link>
+      <pubDate>Thu, 06 Oct 2016 10:12:22 +0200</pubDate>
+      
+      <guid>/blog/making-terminal-applications-in-rust-with-termion/</guid>
+      <description>This post will walk through the basics of implementing a terminal (TTY) application for both new beginners and experienced users of Rust.
+Introduction Terminal applications play an important role in many programmers&amp;rsquo; toolchain, from text editors to minigames while your code is compiling. And it&amp;rsquo;s great to know and understand how to make these yourself, so you can create a customized TUI application for your needs.
+Escape codes and TTY I/O is messy, but fortunately there are libraries for this.</description>
+    </item>
+    
+    <item>
+      <title>Skip Lists: Done Right</title>
+      <link>/blog/skip-lists-done-right/</link>
+      <pubDate>Sat, 17 Sep 2016 13:46:49 +0200</pubDate>
+      
+      <guid>/blog/skip-lists-done-right/</guid>
+      <description>What is a skip list? In short, skip lists are a linked-list-like structure which allows for fast search. It consists of a base list holding the elements, together with a tower of lists maintaining a linked hierarchy of subsequences, each skipping over fewer elements.
+Skip list is a wonderful data structure, one of my personal favorites, but a trend in the past ten years has made them more and more uncommon as a single-threaded in-memory structure.</description>
+    </item>
+    
+  </channel>
+</rss>

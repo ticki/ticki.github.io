@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.53" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>SeaHash: Explained &middot; </title>
+  <meta name="description" content="I explain how SeaHash works." />
+
+  
+  <link type="text/css" rel="stylesheet" href="/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  
+</head>
+
+  <body class=" ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="/"><h1></h1></a>
+      <p class="lead">
+       Warning: This is the blog I wrote as a kid. Most of what is written here is probably wrong. 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="/">Home</a> </li>
+        <li><a href="/about/"> About </a></li><li><a href="https://github.com/ticki"> GitHub </a></li>
+      </ul>
+    </nav>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>SeaHash: Explained</h1>
+  <time datetime=2016-12-08T00:00:00Z class="post-date">Thu, Dec 8, 2016</time>
+  <script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<p>So, not so long ago, I designed <a href="https://github.com/ticki/tfs/tree/master/seahash">SeaHash</a>, an alternative hash algorithm with performance better than most (all?) of the existing non-cryptographic hash functions available. I designed it for checksumming for a file system, I'm working on, but I quickly found out it was sufficient for general hashing.</p>
+
+<p>It blew up. I got a lot of cool feedback, and yesterday it was picked as <a href="https://this-week-in-rust.org/blog/2016/12/06/this-week-in-rust-159/">crate of the week</a>. It shows that there is some interest in it, so I want to explain the ideas behind it.</p>
+
+<h1 id="hashing-an-introduction">Hashing: an introduction</h1>
+
+<p>The basic idea of hashing is to map data with patterns in it to pseudorandom values. It should be designed such that only few collisions happen.</p>
+
+<p>Simply put, the hash function should behave like a pseudorandom function (PRF) producing a seemingly random stream from a non-random stream. It is similar to pseudorandom functions, in a sense, with difference that they must take variable input.</p>
+
+<p>Formally, perfect PRFs are defined as follows:</p>
+
+<blockquote>
+<p><span  class="math">\(f : \{0, 1\}^n \to \{0, 1\}^n\)</span> is a perfect PRF if and only if given a distribution <span  class="math">\(d : \{0, 1\}^n \to \left[0,1\right]\)</span>, <span  class="math">\(f\)</span> maps inputs following the distribution <span  class="math">\(d\)</span> to the uniform distribution.</p>
+</blockquote>
+
+<p>Note that there is a major difference between cryptographic and non-cryptographic hash functions. SeaHash is not cryptographic, and that's very important to understand: It doesn't aim to be. It aims to give a good hash quality, but not cryptographic guarentees.</p>
+
+<h1 id="constructing-a-hash-function-from-a-prf">Constructing a hash function from a PRF</h1>
+
+<p>There are various ways to construct a variable-length hash function from a PRF. The most famous one is Merkle–Damgård construction. We will focus on this.</p>
+
+<p>There are multiple ways to do Merkle–Damgård construction. The most famous one is the wide-pipe construction. It works by having a state, which combined with one block of the input data at a time. The final state will then be the hash value. This combining function is called a &quot;compression function&quot;. It takes two blocks of same length and maps it to one: <span  class="math">\(f : \{0, 1\}^n \times \{0, 1\}^n \to \{0, 1\}^n\)</span>.</p>
+
+<p><span  class="math">\[h = f(f(f(\ldots, b_0), b_1), b_2)\]</span></p>
+
+<p>It is important that this compression emits pseudorandom behavior, and that's where PRFs comes in. For general-purpose hash function where we don't care about security, the construction usually looks like this:</p>
+
+<p><span  class="math">\[f(a, b) = p(a \oplus b)\]</span></p>
+
+<p>This of course is commutative, but that doesn't matter, because we don't need non-commutativity in the Merkle–Damgård construction.</p>
+
+<h1 id="choosing-a-prf">Choosing a PRF</h1>
+
+<p>The <a href="http://www.pcg-random.org/">PCG family of PRFs</a> is my favorite PRF I've seen so far:</p>
+
+<p><span  class="math">\[\begin{align*}
+x &\gets p \otimes x \\
+x &\gets x \oplus ((x \gg 32) \gg (x \gg 60)) \\
+x &\gets p \otimes x
+\end{align*}\]</span></p>
+
+<p>(<span  class="math">\(\otimes\)</span> means modular multiplication)</p>
+
+<p>The PCG paper goes into depth on why this. In particular, it is a quite uncommon to use these kinds of non-fixed shifts.</p>
+
+<p>This is a bijective function, which means that we can't ever have less entropy than the input, which is a good property to have in a hash function.</p>
+
+<h1 id="parallelism">Parallelism</h1>
+
+<p>This construction of course relies on dependencies between the states, rendering it impossible to parallelize.</p>
+
+<p>We need a way to be able to independently calculate multiple block updates. With a single state, this is simply not possible, but fear not, we can add multiple states.</p>
+
+<p>Instruction-level parallelism means that we don't even need to fire up multiple threads (which would be quite expensive), but simply exploit CPU's instruction pipelines.</p>
+
+<p><figure><img src="/img/seahash_state_update_diagram.svg" alt="A diagram of the new design."></figure></p>
+
+<p>In the above diagram, you can see a 4-state design, where every state except the first is shifted down. The first state (<span  class="math">\(a\)</span>) gets the last one (<span  class="math">\(d\)</span>) after being combined with the input block (<span  class="math">\(D\)</span>) through our PRF:</p>
+
+<p><span  class="math">\[\begin{align*}
+a' &= b \\
+b' &= c \\
+c' &= d \\
+d' &= f(a \oplus D) \\
+\end{align*}\]</span></p>
+
+<p>It isn't obvious how this design allows parallelism, but it has to do with the fact that you can unroll the loop, such that the shifts aren't needed. In particular, after 4 rounds, everything is back at where it started:</p>
+
+<p><span  class="math">\[\begin{align*}
+a &\gets f(a \oplus B_1) \\
+b &\gets f(b \oplus B_2) \\
+c &\gets f(c \oplus B_3) \\
+d &\gets f(d \oplus B_4) \\
+\end{align*}\]</span></p>
+
+<p>If we take 4 rounds every iteration, we get 4 independent state updates, which are run in parallel.</p>
+
+<p>This is also called an <em>alternating 4-state Merkle–Damgård construction</em>.</p>
+
+<h2 id="finalizing-the-four-states">Finalizing the four states</h2>
+
+<p>Naively, we would just XOR the four states (which have difference initialization vectors, and hence would not commute).</p>
+
+<p>There are some issues: What if the input doesn't divide our 4 blocks? Well, the simple solution is of course padding, but that gives us another issue: how do we distinguish between padding and normal zeros?</p>
+
+<p>We XOR the length with the hash value. Unfortunately, this is obviously not discrete, since appending another zero would then only affect the value slightly, so we need to run it through our PRF:</p>
+
+<p><figure><img src="/img/seahash_finalization_diagram.svg" alt="SeaHash finalization"></figure></p>
+
+<p>One concern I've heard is that XOR is commutative, and hence permuting the states wouldn't affect the output. But that's simply not true: Each state has distinct initial value, making each lane hash differently.</p>
+
+<h1 id="putting-it-all-together">Putting it all together</h1>
+
+<p>We can finally put it all together:</p>
+
+<p><a href="/img/seahash_construction_diagram.svg"><figure><img src="/img/seahash_construction_diagram.svg" alt="SeaHash construction"></figure></a></p>
+
+<p>(click to zoom)</p>
+
+<p>You can see the code and benchmarks <a href="https://github.com/ticki/tfs/tree/master/seahash">here</a>.</p>
+
+</div>
+
+
+    </main>
+
+    
+      
+    
+  </body>
+</html>

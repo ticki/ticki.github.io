@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Computer Science on </title>
+    <link>/tags/computer-science/</link>
+    <description>Recent content in Computer Science on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 16 Feb 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/computer-science/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Collision Resolution with Nested Hash Tables</title>
+      <link>/blog/collision-resolution-with-nested-hash-tables/</link>
+      <pubDate>Thu, 16 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/collision-resolution-with-nested-hash-tables/</guid>
+      <description>Collision resolution Hash collisions in hash tables are unevitable, and therefore every proper implementation needs a form of collision resolution. Collision resolution is the name of the class of algorithms and techniques used to organize and resolve the case where two entries in the table hash to the same bucket.
+It turns out that the choice and implementation of collision resolution is absolutely critical for the performance of the table, because while hash tables are often mistaken for having \(O(1)\) lookups, they do in reality and theory have a sligthly more complicated behavior.</description>
+    </item>
+    
+    <item>
+      <title>SeaHash: Explained</title>
+      <link>/blog/seahash-explained/</link>
+      <pubDate>Thu, 08 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/seahash-explained/</guid>
+      <description>So, not so long ago, I designed SeaHash, an alternative hash algorithm with performance better than most (all?) of the existing non-cryptographic hash functions available. I designed it for checksumming for a file system, I&#39;m working on, but I quickly found out it was sufficient for general hashing.
+It blew up. I got a lot of cool feedback, and yesterday it was picked as crate of the week. It shows that there is some interest in it, so I want to explain the ideas behind it.</description>
+    </item>
+    
+  </channel>
+</rss>

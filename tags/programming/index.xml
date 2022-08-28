@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Programming on </title>
+    <link>/tags/programming/</link>
+    <description>Recent content in Programming on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 02 Aug 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/programming/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Fearless concurrency with hazard pointers</title>
+      <link>/blog/fearless-concurrency-with-hazard-pointers/</link>
+      <pubDate>Wed, 02 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/fearless-concurrency-with-hazard-pointers/</guid>
+      <description>For those who don&#39;t know, I am working on a file system, TFS, which employs various concurrent structures to improve performance. Whenever you do this kind of advanced concurrency, you will meet the ABA problem, roughly describable as &amp;quot;what if another thread runs the destructor on a value you are reading?&amp;quot;
+What this problem is, and how can it be solved, is what this blog post will investigate. It presents a form of an optimized form of hazard-pointers as well as an implementation thereof.</description>
+    </item>
+    
+    <item>
+      <title>An Atomic Hash Table</title>
+      <link>/blog/an-atomic-hash-table/</link>
+      <pubDate>Sat, 13 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/an-atomic-hash-table/</guid>
+      <description>In programs where there is some kind of global state, you will often find the need for having a key-value map; you could for example imagine keeping some kind of cache of a bunch of entries from database table. Obviously, you&#39;d just use a hash table, easy right?
+Not really. Imagine that there is multiple threads. One approach is to wrap it in a mutex to ensure thread safety, but that would kind of miss the point of concurrency: It wouldn&#39;t be concurrent, it would just be blocking.</description>
+    </item>
+    
+    <item>
+      <title>Skip Lists: Done Right</title>
+      <link>/blog/skip-lists-done-right/</link>
+      <pubDate>Sat, 17 Sep 2016 13:46:49 +0200</pubDate>
+      
+      <guid>/blog/skip-lists-done-right/</guid>
+      <description>What is a skip list? In short, skip lists are a linked-list-like structure which allows for fast search. It consists of a base list holding the elements, together with a tower of lists maintaining a linked hierarchy of subsequences, each skipping over fewer elements.
+Skip list is a wonderful data structure, one of my personal favorites, but a trend in the past ten years has made them more and more uncommon as a single-threaded in-memory structure.</description>
+    </item>
+    
+  </channel>
+</rss>

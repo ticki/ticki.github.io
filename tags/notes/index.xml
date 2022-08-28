@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Notes on </title>
+    <link>/tags/notes/</link>
+    <description>Recent content in Notes on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 30 May 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/notes/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Setting up ArchLinux on a Lenovo Yoga</title>
+      <link>/blog/setting-up-archlinux-on-a-lenovo-yoga/</link>
+      <pubDate>Tue, 30 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/setting-up-archlinux-on-a-lenovo-yoga/</guid>
+      <description>So, I recently broke my computer by spilling tea unto it, so I needed a new computer, and found the Lenovo Yoga 710, which is pretty lightweight and yet strong. As the resources on installing Linux (ArchLinux specifically) on this machine are barely existing, I thought I had to make this post, explaining various critical thing about the installation.
+Bear in mind that all this is made from notes and what I recall from when I installed it (yesterday), so there might be minor inaccuracies.</description>
+    </item>
+    
+    <item>
+      <title>Designing a good non-cryptographic hash function</title>
+      <link>/blog/designing-a-good-non-cryptographic-hash-function/</link>
+      <pubDate>Fri, 04 Nov 2016 16:28:44 +0200</pubDate>
+      
+      <guid>/blog/designing-a-good-non-cryptographic-hash-function/</guid>
+      <description>So, I&#39;ve been needing a hash function for various purposes, lately. None of the existing hash functions I could find were sufficient for my needs, so I went and designed my own. These are my notes on the design of hash functions.
+What is a hash function really? Hash functions are functions which maps a infinite domain to a finite codomain. Two elements in the domain, \(a, b\) are said to collide if \(h(a) = h(b)\).</description>
+    </item>
+    
+    <item>
+      <title>How LZ4 works</title>
+      <link>/blog/how-lz4-works/</link>
+      <pubDate>Tue, 25 Oct 2016 23:25:15 +0200</pubDate>
+      
+      <guid>/blog/how-lz4-works/</guid>
+      <description>LZ4 is a really fast compression algorithm with a reasonable compression ratio, but unfortunately there is limited documentation on how it works. The only explanation (not spec, explanation) can be found on the author&#39;s blog, but I think it is less of an explanation and more of an informal specification.
+This blog post tries to explain it such that anybody (even new beginners) can understand and implement it.
+Linear small-integer code (LSIC) The first part of LZ4 we need to explain is a smart but simple integer encoder.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.53" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title></title>
+  <meta name="description" content="Warning: This is the blog I wrote as a kid. Most of what is written here is probably wrong." />
+
+  
+  <link type="text/css" rel="stylesheet" href="/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="/index.xml" rel="alternate" type="application/rss+xml" title="" />
+  
+</head>
+
+  <body class=" ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="/"><h1></h1></a>
+      <p class="lead">
+       Warning: This is the blog I wrote as a kid. Most of what is written here is probably wrong. 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="/">Home</a> </li>
+        <li><a href="/about/"> About </a></li><li><a href="https://github.com/ticki"> GitHub </a></li>
+      </ul>
+    </nav>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="posts">
+<article class="post">
+  <h1 class="post-title">
+    <a href="/blog/fearless-concurrency-with-hazard-pointers/">Fearless concurrency with hazard pointers</a>
+  </h1>
+  <time datetime="2017-08-02T00:00:00Z" class="post-date">Wed, Aug 2, 2017</time>
+  For those who don't know, I am working on a file system, TFS, which employs various concurrent structures to improve performance. Whenever you do this kind of advanced concurrency, you will meet the ABA problem, roughly describable as &quot;what if another thread runs the destructor on a value you are reading?&quot;
+What this problem is, and how can it be solved, is what this blog post will investigate. It presents a form of an optimized form of hazard-pointers as well as an implementation thereof.
+  
+  <div class="read-more-link">
+    <a href="/blog/fearless-concurrency-with-hazard-pointers/">Read More…</a>
+  </div>
+  
+</article><article class="post">
+  <h1 class="post-title">
+    <a href="/blog/setting-up-archlinux-on-a-lenovo-yoga/">Setting up ArchLinux on a Lenovo Yoga</a>
+  </h1>
+  <time datetime="2017-05-30T00:00:00Z" class="post-date">Tue, May 30, 2017</time>
+  So, I recently broke my computer by spilling tea unto it, so I needed a new computer, and found the Lenovo Yoga 710, which is pretty lightweight and yet strong. As the resources on installing Linux (ArchLinux specifically) on this machine are barely existing, I thought I had to make this post, explaining various critical thing about the installation.
+Bear in mind that all this is made from notes and what I recall from when I installed it (yesterday), so there might be minor inaccuracies.
+  
+  <div class="read-more-link">
+    <a href="/blog/setting-up-archlinux-on-a-lenovo-yoga/">Read More…</a>
+  </div>
+  
+</article><article class="post">
+  <h1 class="post-title">
+    <a href="/blog/an-atomic-hash-table/">An Atomic Hash Table</a>
+  </h1>
+  <time datetime="2017-05-13T00:00:00Z" class="post-date">Sat, May 13, 2017</time>
+  In programs where there is some kind of global state, you will often find the need for having a key-value map; you could for example imagine keeping some kind of cache of a bunch of entries from database table. Obviously, you'd just use a hash table, easy right?
+Not really. Imagine that there is multiple threads. One approach is to wrap it in a mutex to ensure thread safety, but that would kind of miss the point of concurrency: It wouldn't be concurrent, it would just be blocking.
+  
+  <div class="read-more-link">
+    <a href="/blog/an-atomic-hash-table/">Read More…</a>
+  </div>
+  
+</article><article class="post">
+  <h1 class="post-title">
+    <a href="/blog/you-are-probably-doing-login-systems-wrong/">You Are (Probably) Doing Login Systems Wrong</a>
+  </h1>
+  <time datetime="2017-05-12T00:00:00Z" class="post-date">Fri, May 12, 2017</time>
+  A thing, most programmers have tried at least once, is login systems. Despite being seemingly a simple task, it is in fact very hard to do right.
+So, let's look into, how we can actually do this right.
+Storing passwords Okay, this is common knowledge: Salt and hash your passwords.
+However, it is often done wrong. You'll see code like:
+hash(password + salt)  This is better than unsalted, unhashed passwords, but it's far from bruteforce resistant.
+  
+  <div class="read-more-link">
+    <a href="/blog/you-are-probably-doing-login-systems-wrong/">Read More…</a>
+  </div>
+  
+</article><article class="post">
+  <h1 class="post-title">
+    <a href="/blog/a-general-construction-for-rolling-hash-functions/">A general construction for rolling hash functions</a>
+  </h1>
+  <time datetime="2017-03-02T00:00:00Z" class="post-date">Thu, Mar 2, 2017</time>
+  What is a rolling hash function? A hash function is a function \(h : S^\times \to F\) with \(S, F\) being some finite sets.
+A rolling hash function is really a set of functions \((h, u)\), where \(u\) allows retroactively updated a symbol
+\[h(\ldots a \ldots) \mapsto h(\ldots a' \ldots)\]
+To put it more formally, a rolling hash function has an associated function \(u : F \times S^2 \times \mathbb N \to F\), satisfying
+  
+  <div class="read-more-link">
+    <a href="/blog/a-general-construction-for-rolling-hash-functions/">Read More…</a>
+  </div>
+  
+</article><article class="post">
+  <h1 class="post-title">
+    <a href="/blog/collision-resolution-with-nested-hash-tables/">Collision Resolution with Nested Hash Tables</a>
+  </h1>
+  <time datetime="2017-02-16T00:00:00Z" class="post-date">Thu, Feb 16, 2017</time>
+  Collision resolution Hash collisions in hash tables are unevitable, and therefore every proper implementation needs a form of collision resolution. Collision resolution is the name of the class of algorithms and techniques used to organize and resolve the case where two entries in the table hash to the same bucket.
+It turns out that the choice and implementation of collision resolution is absolutely critical for the performance of the table, because while hash tables are often mistaken for having \(O(1)\) lookups, they do in reality and theory have a sligthly more complicated behavior.
+  
+  <div class="read-more-link">
+    <a href="/blog/collision-resolution-with-nested-hash-tables/">Read More…</a>
+  </div>
+  
+</article><article class="post">
+  <h1 class="post-title">
+    <a href="/blog/portfolio-of-logos-and-icons/">Portfolio of Logos and Icons</a>
+  </h1>
+  <time datetime="2016-12-19T00:00:00Z" class="post-date">Mon, Dec 19, 2016</time>
+  This is a collection of the logos and icons, I created (and used/not drafts) during the last years.
+Open-Sea Open Sea is a dead game project I was working on:
+          Simple pixel art. Stylistic and minimalistic text. Simple icon similar to the graphics in the game.  Redox Redox is an operating-system I work on. The icon was one of the first things I contributed to Redox (before code):
+  
+  <div class="read-more-link">
+    <a href="/blog/portfolio-of-logos-and-icons/">Read More…</a>
+  </div>
+  
+</article><article class="post">
+  <h1 class="post-title">
+    <a href="/blog/the-eudex-algorithm/">The Eudex Algorithm</a>
+  </h1>
+  <time datetime="2016-12-11T00:00:00Z" class="post-date">Sun, Dec 11, 2016</time>
+  Half a year ago, I designed Eudex as a modern replacement for Soundex, which is still widely used today. Eudex supports a wide range of special-cases of European languages, while preserving the spirit of simplicity, Soundex has.
+Both Eudex and Soundex are phonetic algorithms that produce a representation of the sound of some string. Eudex is fundamentally different from Soundex in that it is not a phonetic classifier. It is a phonetic locality-sensitive hash, which means that two similarly-sounding strings are not mapped to the same value, but instead to values near to each other.
+  
+  <div class="read-more-link">
+    <a href="/blog/the-eudex-algorithm/">Read More…</a>
+  </div>
+  
+</article><article class="post">
+  <h1 class="post-title">
+    <a href="/blog/seahash-explained/">SeaHash: Explained</a>
+  </h1>
+  <time datetime="2016-12-08T00:00:00Z" class="post-date">Thu, Dec 8, 2016</time>
+  So, not so long ago, I designed SeaHash, an alternative hash algorithm with performance better than most (all?) of the existing non-cryptographic hash functions available. I designed it for checksumming for a file system, I'm working on, but I quickly found out it was sufficient for general hashing.
+It blew up. I got a lot of cool feedback, and yesterday it was picked as crate of the week. It shows that there is some interest in it, so I want to explain the ideas behind it.
+  
+  <div class="read-more-link">
+    <a href="/blog/seahash-explained/">Read More…</a>
+  </div>
+  
+</article><article class="post">
+  <h1 class="post-title">
+    <a href="/blog/designing-a-good-non-cryptographic-hash-function/">Designing a good non-cryptographic hash function</a>
+  </h1>
+  <time datetime="2016-11-04T16:28:44&#43;0200" class="post-date">Fri, Nov 4, 2016</time>
+  So, I've been needing a hash function for various purposes, lately. None of the existing hash functions I could find were sufficient for my needs, so I went and designed my own. These are my notes on the design of hash functions.
+What is a hash function really? Hash functions are functions which maps a infinite domain to a finite codomain. Two elements in the domain, \(a, b\) are said to collide if \(h(a) = h(b)\).
+  
+  <div class="read-more-link">
+    <a href="/blog/designing-a-good-non-cryptographic-hash-function/">Read More…</a>
+  </div>
+  
+</article><article class="post">
+  <h1 class="post-title">
+    <a href="/blog/how-lz4-works/">How LZ4 works</a>
+  </h1>
+  <time datetime="2016-10-25T23:25:15&#43;0200" class="post-date">Tue, Oct 25, 2016</time>
+  LZ4 is a really fast compression algorithm with a reasonable compression ratio, but unfortunately there is limited documentation on how it works. The only explanation (not spec, explanation) can be found on the author's blog, but I think it is less of an explanation and more of an informal specification.
+This blog post tries to explain it such that anybody (even new beginners) can understand and implement it.
+Linear small-integer code (LSIC) The first part of LZ4 we need to explain is a smart but simple integer encoder.
+  
+  <div class="read-more-link">
+    <a href="/blog/how-lz4-works/">Read More…</a>
+  </div>
+  
+</article><article class="post">
+  <h1 class="post-title">
+    <a href="/blog/making-terminal-applications-in-rust-with-termion/">Making Terminal Applications in Rust with Termion</a>
+  </h1>
+  <time datetime="2016-10-06T10:12:22&#43;0200" class="post-date">Thu, Oct 6, 2016</time>
+  This post will walk through the basics of implementing a terminal (TTY) application for both new beginners and experienced users of Rust.
+Introduction Terminal applications play an important role in many programmers&rsquo; toolchain, from text editors to minigames while your code is compiling. And it&rsquo;s great to know and understand how to make these yourself, so you can create a customized TUI application for your needs.
+Escape codes and TTY I/O is messy, but fortunately there are libraries for this.
+  
+  <div class="read-more-link">
+    <a href="/blog/making-terminal-applications-in-rust-with-termion/">Read More…</a>
+  </div>
+  
+</article><article class="post">
+  <h1 class="post-title">
+    <a href="/blog/skip-lists-done-right/">Skip Lists: Done Right</a>
+  </h1>
+  <time datetime="2016-09-17T13:46:49&#43;0200" class="post-date">Sat, Sep 17, 2016</time>
+  What is a skip list? In short, skip lists are a linked-list-like structure which allows for fast search. It consists of a base list holding the elements, together with a tower of lists maintaining a linked hierarchy of subsequences, each skipping over fewer elements.
+Skip list is a wonderful data structure, one of my personal favorites, but a trend in the past ten years has made them more and more uncommon as a single-threaded in-memory structure.
+  
+  <div class="read-more-link">
+    <a href="/blog/skip-lists-done-right/">Read More…</a>
+  </div>
+  
+</article><article class="post">
+  <h1 class="post-title">
+    <a href="/about/">About me</a>
+  </h1>
+  <time datetime="2016-09-14T22:50:08&#43;0200" class="post-date">Wed, Sep 14, 2016</time>
+  This is the blog I wrote as a kid. Most of what is written here is probably wrong.
+  
+</article>
+</div>
+    </main>
+
+    
+      
+    
+  </body>
+</html>
